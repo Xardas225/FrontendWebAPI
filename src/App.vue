@@ -10,8 +10,8 @@ import { ElAside, ElContainer, ElHeader, ElMain } from "element-plus";
           <RouterLink to="/">Дом</RouterLink> |
           <RouterLink to="/profile">Профиль</RouterLink> |
           <RouterLink to="/users">Пользователи</RouterLink> |
-          <RouterLink to="/signin">Авторизация</RouterLink> |
-          <RouterLink to="/signup">Регистрация</RouterLink> |
+          <RouterLink to="/login">Авторизация</RouterLink> |
+          <RouterLink to="/register">Регистрация</RouterLink> |
         </nav>
       </ElHeader>
       <ElContainer>

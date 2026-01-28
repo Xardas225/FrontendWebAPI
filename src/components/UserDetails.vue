@@ -7,7 +7,7 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const auth = useAuthStore();
-const userId = route?.params?.id;
+const userId = route?.params?.id || localStorage.getItem('userId');
 
 const form = reactive({
   email: "",

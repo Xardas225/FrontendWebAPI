@@ -5,9 +5,7 @@ import api from '@/api/api'
 
 
 export const useAuthStore = defineStore('auth', {
-    state: () => ({
-        userId: null,
-    }),
+    state: () => ({}),
 
     actions: {
         async register(userData) {
@@ -16,7 +14,26 @@ export const useAuthStore = defineStore('auth', {
                     data
                 } = await api.post('/auth/register', userData)
 
-                this.userId = data.userId
+                localStorage.setItem('userId', data.id)
+
+                return {
+                    success: true
+                }
+            } catch (error) {
+                console.log(error.message)
+                return {
+                    success: false,
+                    error: this.error
+                }
+            }
+        },
+        async login(userData) {
+            try {
+                const {
+                    data
+                } = await api.post('/auth/login', userData)
+
+                localStorage.setItem('AccesssToken', data.token)
 
                 return {
                     success: true
@@ -33,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const {
                     data
-                } = await api.get(`/users/${userId || this.userId}`)
+                } = await api.get(`/users/${userId}`)
 
                 return {
                     ...data

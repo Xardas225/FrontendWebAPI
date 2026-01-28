@@ -1,7 +1,6 @@
-
-const routes = [
-    {
+const routes = [{
         path: '/',
+        name: 'home',
         component: () => import('@/components/Home.vue'),
         meta: {
             title: 'Дом'
@@ -17,15 +16,17 @@ const routes = [
         props: true
     },
     {
-        path: '/signin',
-        component: () => import('@/components/SignIn.vue'),
+        path: '/login',
+        name: 'login',
+        component: () => import('@/components/Login.vue'),
         meta: {
             title: 'Авторизация'
         }
     },
     {
-        path: '/signup',
-        component: () => import('@/components/SignUp.vue'),
+        path: '/register',
+        name: 'register',
+        component: () => import('@/components/Register.vue'),
         meta: {
             title: 'Регистрация'
         }
