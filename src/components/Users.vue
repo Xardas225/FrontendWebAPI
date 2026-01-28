@@ -1,18 +1,18 @@
 <script setup>
 import { ElTable, ElTableColumn, ElButton } from "element-plus";
 import { onMounted, ref } from "vue";
-import { useAuthStore } from "@/store/auth";
+import { useUserStore } from "@/store/user";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const auth = useAuthStore();
+const userApi = useUserStore();
 
 const userList = ref();
 
 const loadAllUsers = async () => {
   try {
     userList.value = [];
-    const data = await auth.loadAllUsers();
+    const data = await userApi.loadAllUsers();
 
     if (data) {
       userList.value = data;

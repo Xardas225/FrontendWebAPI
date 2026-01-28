@@ -2,99 +2,87 @@ import {
     defineStore
 } from 'pinia'
 import api from '@/api/api'
+import {
+    ref
+} from 'vue';
 
+export const useAuthStore = defineStore('auth', () => {
+    const user = ref({});
+    const isAuthenticated = ref(false);
 
-export const useAuthStore = defineStore('auth', {
-    state: () => ({}),
+    const login = async (credentials) => {
+        try {
+            const {
+                data
+            } = await api.post('/auth/login', credentials)
 
-    actions: {
-        async register(userData) {
-            try {
-                const {
-                    data
-                } = await api.post('/auth/register', userData)
+            user.value = data;
+            isAuthenticated.value = true;
 
-                localStorage.setItem('userId', data.id)
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('userId', data.id)
 
-                return {
-                    success: true
-                }
-            } catch (error) {
-                console.log(error.message)
-                return {
-                    success: false,
-                    error: this.error
-                }
+            return {
+                success: true
             }
-        },
-        async login(userData) {
-            try {
-                const {
-                    data
-                } = await api.post('/auth/login', userData)
-
-                localStorage.setItem('token', data.token)
-
-                return {
-                    success: true
-                }
-            } catch (error) {
-                console.log(error.message)
-                return {
-                    success: false,
-                    error: this.error
-                }
-            }
-        },
-        async loadUserData(userId) {
-            try {
-                const {
-                    data
-                } = await api.get(`/users/${userId}`)
-
-                return {
-                    ...data
-                }
-            } catch (error) {
-                console.log(error.message)
-                return {
-                    success: false,
-                    error: this.error
-                }
-            }
-        },
-        async updateUserData(data) {
-            try {
-                await api.put(`/users/${this.userId}`, data)
-                await this.loadUserData()
-
-                return {
-                    success: true
-                }
-            } catch (error) {
-                console.log(error.message)
-                return {
-                    success: false,
-                    error: this.error
-                }
-            }
-        },
-        async loadAllUsers() {
-            try {
-                const {
-                    data
-                } = await api.get(`/users`)
-
-                return data
-            } catch (error) {
-                console.log(error.message)
-                return {
-                    success: false,
-                    error: this.error
-                }
+        } catch (error) {
+            console.error('Login error:', error)
+            return {
+                success: false,
+                error: error.response.data.message || error.message
             }
         }
     }
 
+    const register = async (credentials) => {
+        try {
+            const {
+                data
+            } = await api.post('/auth/register', credentials)
+
+
+            return {
+                success: true
+            }
+        } catch (error) {
+            console.log(error.message)
+            return {
+                success: false,
+                error: this.error
+            }
+        }
+    }
+
+    const logout = async () => {
+        try {
+            const credentials = {
+                id: user.id,
+                email: user.email
+            }
+            await api.post('/auth/logout', credentials)
+
+            isAuthenticated.value = false;
+            user.value = {};
+
+            return {
+                success: true
+            }
+
+        } catch (error) {
+            console.error('Logout error:', error)
+            return {
+                success: false,
+                error: error.response.data.message || error.message
+            }
+        }
+    }
+
+    return {
+        user,
+        login,
+        register,
+        logout,
+        isAuthenticated
+    }
 
 })

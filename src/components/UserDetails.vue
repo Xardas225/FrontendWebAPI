@@ -1,13 +1,13 @@
 <script setup>
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import { ElForm, ElFormItem, ElButton, ElInput, ElText } from "element-plus";
 import { CloseBold } from "@element-plus/icons-vue";
-import { useAuthStore } from "@/store/auth";
+import { useUserStore } from "@/store/user";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const auth = useAuthStore();
-const userId = route?.params?.id || localStorage.getItem('userId');
+const userApi = useUserStore();
+const userId = ref(route?.params?.id || localStorage.getItem('userId'));
 
 const form = reactive({
   email: "",
@@ -18,7 +18,7 @@ const form = reactive({
 
 const save = async () => {
   try {
-    await auth.updateUserData({ ...form });
+    await userApi.updateUserData({ id: userId.value, ...form });
   } catch (error) {
     console.error("Ошибка при обновлении пользователя:", error.message);
   }
@@ -26,7 +26,8 @@ const save = async () => {
 
 const load = async () => {
   try {
-    const data = await auth.loadUserData(userId);
+    const data = await userApi.loadUserData(userId.value);
+    
     Object.assign(form, data);
   } catch (error) {
     console.error("Ошибка при получении пользователей:", error.message);
