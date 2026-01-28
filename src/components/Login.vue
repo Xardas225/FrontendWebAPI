@@ -3,7 +3,9 @@ import { ElForm, ElFormItem, ElButton, ElInput, ElText } from "element-plus";
 import { CloseBold } from "@element-plus/icons-vue";
 import { reactive } from "vue";
 import { useAuthStore } from "@/store/auth";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const auth = useAuthStore();
 
 const form = reactive({
@@ -16,7 +18,7 @@ const login = async () => {
     const result = await auth.login({ ...form });
     if (result.success) {
       router.push({
-        name: "home"
+        name: "home",
       });
     }
   } catch (error) {
