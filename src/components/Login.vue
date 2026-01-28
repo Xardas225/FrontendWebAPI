@@ -13,7 +13,7 @@ const form = reactive({
 
 const login = async () => {
   try {
-    await auth.login({ ...form });
+    const result = await auth.login({ ...form });
     if (result.success) {
       router.push({
         name: "home"

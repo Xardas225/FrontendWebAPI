@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', {
                     data
                 } = await api.post('/auth/login', userData)
 
-                localStorage.setItem('AccesssToken', data.token)
+                localStorage.setItem('token', data.token)
 
                 return {
                     success: true
@@ -79,7 +79,7 @@ export const useAuthStore = defineStore('auth', {
                 }
             }
         },
-        async loadAllUsers(data) {
+        async loadAllUsers() {
             try {
                 const {
                     data

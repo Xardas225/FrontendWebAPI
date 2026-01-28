@@ -13,17 +13,20 @@ const loadAllUsers = async () => {
   try {
     userList.value = [];
     const data = await auth.loadAllUsers();
-    userList.value = data;
+
+    if (data) {
+      userList.value = data;
+    }
   } catch (error) {
     console.error(error.message);
   }
 };
 
 const checkUserDetails = (data) => {
-    router.push({
-    name: 'profile',
-    params: { id: data.id }
-  })
+  router.push({
+    name: "user-detail",
+    params: { id: data.id },
+  });
 };
 
 onMounted(async () => {
