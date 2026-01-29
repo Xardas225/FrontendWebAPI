@@ -56,9 +56,10 @@ export const useAuthStore = defineStore('auth', () => {
     const logout = async () => {
         try {
             const credentials = {
-                id: user.id,
-                email: user.email
+                id: user.value.id,
+                email: user.value.email
             }
+            console.log(credentials);
             await api.post('/auth/logout', credentials)
 
             isAuthenticated.value = false;

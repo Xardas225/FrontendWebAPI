@@ -33,9 +33,18 @@ const routes = [{
     },
     {
         path: '/users',
+        name: 'users',
         component: () => import('@/components/Users.vue'),
         meta: {
             title: 'Пользователи'
+        }
+    },
+    {
+        path: '/dishes',
+        name: 'dishes',
+        component: () => import('@/components/Dishes.vue'),
+        meta: {
+            title: 'Блюда'
         }
     },
 ]

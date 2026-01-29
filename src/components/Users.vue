@@ -19,7 +19,7 @@ const loadAllUsers = async () => {
     }
   } catch (error) {
     console.error(error.message);
-  }
+  } 
 };
 
 const checkUserDetails = (data) => {
