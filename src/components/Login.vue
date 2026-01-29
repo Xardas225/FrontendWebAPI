@@ -1,5 +1,16 @@
 <script setup>
-import { ElForm, ElFormItem, ElButton, ElInput, ElText } from "element-plus";
+import {
+  ElForm,
+  ElFormItem,
+  ElButton,
+  ElInput,
+  ElText,
+  ElRow,
+  ElTabs,
+  ElTabPane,
+  ElRadioGroup,
+  ElRadio,
+} from "element-plus";
 import { CloseBold } from "@element-plus/icons-vue";
 import { reactive } from "vue";
 import { useAuthStore } from "@/store/auth";
@@ -11,6 +22,7 @@ const auth = useAuthStore();
 const form = reactive({
   email: "",
   password: "",
+  role: 0,
 });
 
 const login = async () => {
@@ -29,15 +41,31 @@ const login = async () => {
 
 <template>
   <ElForm label-width="auto">
-    <ElText class="mx-1" size="large">Авторизация</ElText>
-    <ElFormItem label="Email">
+    <ElRow justify="center" class="row">
+      <ElText class="mx-1" size="large">Авторизация</ElText>
+    </ElRow>
+
+    <ElFormItem label-position="top" label="Email">
       <ElInput v-model="form.email" clearable :clear-icon="CloseBold" />
     </ElFormItem>
-    <ElFormItem label="Password">
+    <ElFormItem label-position="top" label="Password">
       <ElInput v-model="form.password" clearable :clear-icon="CloseBold" />
     </ElFormItem>
+
+    <ElRadioGroup v-model="form.role" class="radio-group">
+      <ElRadio :value="0"> I`m a user </ElRadio>
+      <ElRadio :value="1"> I`m a chef </ElRadio>
+    </ElRadioGroup>
+
     <ElButton type="success" plain @click="login"> Send </ElButton>
   </ElForm>
 </template>
-
-<style scoped></style>
+<style scoped>
+.row {
+  margin: 20px;
+}
+.radio-group {
+  display: flex;
+  margin-bottom: 20px;
+}
+</style>
