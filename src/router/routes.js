@@ -1,7 +1,7 @@
 const routes = [{
         path: '/',
         name: 'home',
-        component: () => import('@/components/Home.vue'),
+        component: () => import('@/views/HomeView.vue'),
         meta: {
             title: 'Дом'
         }
@@ -9,7 +9,7 @@ const routes = [{
     {
         path: '/users/:id',
         name: 'user-detail',
-        component: () => import('@/components/UserDetails.vue'),
+        component: () => import('@/views/UserDetailsView.vue'),
         meta: {
             title: 'Пользователь'
         },
@@ -18,7 +18,7 @@ const routes = [{
     {
         path: '/login',
         name: 'login',
-        component: () => import('@/components/Login.vue'),
+        component: () => import('@/views/public/LoginView.vue'),
         meta: {
             title: 'Авторизация'
         }
@@ -26,7 +26,7 @@ const routes = [{
     {
         path: '/register',
         name: 'register',
-        component: () => import('@/components/Register.vue'),
+        component: () => import('@/views/public/RegisterView.vue'),
         meta: {
             title: 'Регистрация'
         }
@@ -34,7 +34,7 @@ const routes = [{
     {
         path: '/users',
         name: 'users',
-        component: () => import('@/components/Users.vue'),
+        component: () => import('@/views/UserListView.vue'),
         meta: {
             title: 'Пользователи'
         }
@@ -42,7 +42,7 @@ const routes = [{
     {
         path: '/dishes',
         name: 'dishes',
-        component: () => import('@/components/Dishes.vue'),
+        component: () => import('@/views/DishListView.vue'),
         meta: {
             title: 'Блюда'
         }
