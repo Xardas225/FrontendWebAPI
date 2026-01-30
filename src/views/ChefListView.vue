@@ -1,10 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useChefStore } from "@/store/chef";
-import { ElButton, ElIcon, ElRow } from "element-plus";
+import { ElButton, ElIcon, ElRate, ElRow } from "element-plus";
+import { useRouter } from "vue-router";
 
 const chefList = ref([]);
 const chefStore = useChefStore();
+const router = useRouter();
 
 const loadAllChefs = async () => {
   try {
@@ -14,6 +16,15 @@ const loadAllChefs = async () => {
 
     chefList.value = data;
   } catch (error) {}
+};
+
+const checkChefDetails = (data) => {
+  console.log(data);
+
+  router.push({
+    name: "chef-detail",
+    params: { id: data.chefId },
+  });
 };
 
 onMounted(async () => {
@@ -34,7 +45,14 @@ onMounted(async () => {
         <div class="card-description">
           <ElRow> Kichen`s Name: {{ item.kitchenName }} </ElRow>
           <ElRow>Kichen`s Description: {{ item.description }}</ElRow>
-          <ElRow>Rating: {{ item.rating }}</ElRow>
+          <ElRow
+            >Rating:
+            <ElRate
+              v-model="item.rating"
+              disabled
+              show-score
+              text-color="#ff9900"
+          /></ElRow>
           <ElRow>Amount orders: {{ item.totalOrders }}</ElRow>
         </div>
       </div>
@@ -46,6 +64,7 @@ onMounted(async () => {
               <Star />
             </ElIcon>
           </ElButton>
+          <ElButton @click="checkChefDetails(item)"> Подробнее </ElButton>
         </div>
       </template>
     </ElCard>

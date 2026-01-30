@@ -58,8 +58,18 @@ const routes = [{
         component: () => import('@/views/ChefListView.vue'),
         meta: {
             requiresAuth: true,
-            title: 'Блюда'
+            title: 'Шефы'
         }
+    },
+    {
+        path: '/chefs/:id',
+        name: 'chef-detail',
+        component: () => import('@/views/ChefDetailsView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: 'Шеф'
+        },
+        props: true
     },
 ]
 
