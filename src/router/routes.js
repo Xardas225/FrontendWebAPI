@@ -11,6 +11,7 @@ const routes = [{
         name: 'user-detail',
         component: () => import('@/views/UserDetailsView.vue'),
         meta: {
+            requiresAuth: true,
             title: 'Пользователь'
         },
         props: true
@@ -20,6 +21,7 @@ const routes = [{
         name: 'login',
         component: () => import('@/views/public/LoginView.vue'),
         meta: {
+            guestOnly: true,
             title: 'Авторизация'
         }
     },
@@ -28,6 +30,7 @@ const routes = [{
         name: 'register',
         component: () => import('@/views/public/RegisterView.vue'),
         meta: {
+            guestOnly: true,
             title: 'Регистрация'
         }
     },
@@ -36,6 +39,7 @@ const routes = [{
         name: 'users',
         component: () => import('@/views/UserListView.vue'),
         meta: {
+            requiresAuth: true,
             title: 'Пользователи'
         }
     },
@@ -44,6 +48,16 @@ const routes = [{
         name: 'dishes',
         component: () => import('@/views/DishListView.vue'),
         meta: {
+            requiresAuth: true,
+            title: 'Блюда'
+        }
+    },
+    {
+        path: '/chefs',
+        name: 'chefs',
+        component: () => import('@/views/ChefListView.vue'),
+        meta: {
+            requiresAuth: true,
             title: 'Блюда'
         }
     },

@@ -13,8 +13,8 @@ import {
   ElText,
 } from "element-plus";
 import { useAuthStore } from "./store/auth";
-import { computed } from "vue";
 import router from "./router";
+import { watch, onMounted, computed } from "vue";
 
 const auth = useAuthStore();
 const isAuthenticated = computed(() => auth.isAuthenticated);
@@ -32,6 +32,10 @@ const logout = async () => {
     console.error(error.message);
   }
 };
+
+onMounted(() => {
+  auth.initialize();
+});
 </script>
 
 <template>
@@ -65,7 +69,7 @@ const logout = async () => {
             </ElMenuItem>
 
             <ElMenuItem index="3">
-              <RouterLink to="/users" class="router-link">
+              <RouterLink to="/chefs" class="router-link">
                 <ElText class="mx-1" type="primary" size="large">
                   Повара
                 </ElText>
