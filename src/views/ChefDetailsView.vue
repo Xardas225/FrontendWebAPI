@@ -7,25 +7,49 @@ import {
   ElCol,
   ElRate,
   ElRow,
-  ElCard
+  ElCard,
 } from "element-plus";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useChefStore } from "@/store/chef";
+import { useUserStore } from "@/store/user";
 
-const chef = ref({
-  userId: 18,
-  email: "ChefSuper2000@yandex.ru",
-  phone: null,
-  name: "ChefSuper2000",
-  lastName: "ChefSuper2000",
-  chefId: 1,
-  kitchenName: "ChefSuper2000 K",
-  description: "Home Kitchen",
-  isActive: false,
-  rating: 4.5,
-  totalOrders: 0,
-  startTime: null,
-  endTime: null,
-  chefExperience: 0,
+const fileInput = ref();
+const route = useRoute();
+const userId = ref(route?.params?.id || localStorage.getItem("userId"));
+const chefApi = useChefStore();
+const userApi = useUserStore();
+
+const chef = ref({});
+
+const load = async () => {
+  try {
+    chef.value = {};
+
+    chef.value = await chefApi.getChefByUserId(userId.value);
+  } catch (error) {}
+};
+
+const chooseFile = () => {
+  fileInput.value.click();
+};
+
+const handleFileSelect = async (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    const formData = new FormData();
+
+    formData.append("userId", userId.value);
+    formData.append("file", file);
+
+    await userApi.setUserAvatar(formData);
+    await load(); 
+  }
+};
+
+onMounted(async () => {
+  await load();
 });
 </script>
 
@@ -42,9 +66,19 @@ const chef = ref({
     <ElCard class="chef-card" shadow="never">
       <div class="chef-header">
         <div class="chef-avatar">
-          <ElAvatar :size="100">
+          <ElAvatar :size="100" :src="chef.avatarUrl">
             {{ chef.name }}
           </ElAvatar>
+
+          <ElButton @click="chooseFile"> Изменить </ElButton>
+
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            class="file-input"
+            @change="handleFileSelect"
+          />
         </div>
 
         <div class="chef-info">
@@ -272,6 +306,10 @@ const chef = ref({
 .coming-soon p {
   color: #666;
   margin: 0;
+}
+
+.file-input {
+  display: none;
 }
 
 /* Адаптивность */

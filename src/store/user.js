@@ -56,9 +56,31 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+
+    const setUserAvatar = async (data) => {
+        try {
+            await api.post(`/upload`, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+
+            return {
+                success: true
+            }
+        } catch (error) {
+            console.log(error.message)
+            return {
+                success: false,
+                error: this.error
+            }
+        }
+    }
+
     return {
         loadUserData,
         updateUserData,
-        loadAllUsers
+        loadAllUsers,
+        setUserAvatar
     }
 })

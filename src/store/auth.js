@@ -16,7 +16,6 @@ export const useAuthStore = defineStore('auth', () => {
     // Восстановление состояния из localStorage при создании store
     const initialize = () => {
         const savedToken = localStorage.getItem('token')
-        const savedUserId = localStorage.getItem('userId')
 
         if (savedToken) {
             token.value = savedToken
@@ -87,7 +86,6 @@ export const useAuthStore = defineStore('auth', () => {
             }
         }
     }
-
 
     const clearAuthData = () => {
         user.value = {}

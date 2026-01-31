@@ -22,7 +22,25 @@ export const useChefStore = defineStore('chef', () => {
         }
     }
 
+
+    const getChefByUserId = async (id) => {
+        try {
+            const {
+                data
+            } = await api.get(`/chefs/${id}`)
+
+            return data
+        } catch (error) {
+            console.log(error.message)
+            return {
+                success: false,
+                error: this.error
+            }
+        }
+    }
+
     return {
-        loadAllChefs
+        loadAllChefs,
+        getChefByUserId
     }
 })

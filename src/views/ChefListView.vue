@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useChefStore } from "@/store/chef";
-import { ElButton, ElIcon, ElRate, ElRow } from "element-plus";
+import { ElAvatar, ElButton, ElIcon, ElRate, ElRow } from "element-plus";
 import { useRouter } from "vue-router";
 
 const chefList = ref([]);
@@ -19,11 +19,9 @@ const loadAllChefs = async () => {
 };
 
 const checkChefDetails = (data) => {
-  console.log(data);
-
   router.push({
     name: "chef-detail",
-    params: { id: data.chefId },
+    params: { id: data.userId },
   });
 };
 
@@ -38,6 +36,9 @@ onMounted(async () => {
       <template #header>
         <div class="card-header">
           <span class="card-name">{{ item.name }} {{ item.lastName }}</span>
+          <ElAvatar  :size="100" :src="item.avatarUrl">
+            {{ chef.name }}
+          </ElAvatar>
         </div>
       </template>
 
