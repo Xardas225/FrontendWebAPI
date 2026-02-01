@@ -19,7 +19,8 @@ import { CloseBold } from "@element-plus/icons-vue";
 const route = useRoute();
 const chefApi = useChefStore();
 const chef = ref({});
-const userId = ref(route?.params?.id || localStorage.getItem("userId"));
+const chefUserId = ref(route?.params?.id);
+
 const chefExperienceOptions = [
   {
     value: 0,
@@ -43,14 +44,14 @@ const load = async () => {
   try {
     chef.value = {};
 
-    chef.value = await chefApi.getChefByUserId(userId.value);
+    chef.value = await chefApi.getChefByUserId(chefUserId.value);
   } catch (error) {}
 };
 
 const save = async () => {
   try {
     const requestData = {
-      userId: userId.value,
+      userId: chefUserId.value,
       email: chef.value.email,
       name: chef.value.name,
       lastName: chef.value.lastName,
@@ -144,7 +145,7 @@ onMounted(async () => {
             v-for="item in chefExperienceOptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value" 
+            :value="item.value"
           />
         </ElSelect>
       </ElFormItem>

@@ -1,0 +1,151 @@
+.profile-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.breadcrumb {
+  margin-bottom: 20px;
+}
+
+.profile-card {
+  margin-bottom: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  color: #333;
+}
+
+.profile-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.status-tag {
+  font-size: 14px;
+  padding: 6px 12px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.total-orders {
+  color: #666;
+  font-size: 14px;
+}
+
+.profile-actions {
+  flex-shrink: 0;
+}
+
+.profile-details {
+  margin-bottom: 30px;
+}
+
+.detail-item {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #333;
+  min-width: 150px;
+  margin-right: 10px;
+}
+
+.detail-value {
+  color: #666;
+}
+
+.description-section {
+  margin-top: 30px;
+}
+
+.description-section h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.description-text {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.no-description {
+  color: #999;
+  font-style: italic;
+  margin: 0;
+}
+
+.coming-soon {
+  margin-top: 20px;
+}
+
+.coming-soon h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.coming-soon p {
+  color: #666;
+  margin: 0;
+}
+
+.file-input {
+  display: none;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .profile-stats {
+    justify-content: center;
+  }
+
+  .profile-actions {
+    width: 100%;
+  }
+
+  .profile-actions .el-button {
+    width: 100%;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .detail-label {
+    margin-bottom: 5px;
+  }
+}

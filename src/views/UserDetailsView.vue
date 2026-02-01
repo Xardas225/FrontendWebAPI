@@ -1,34 +1,31 @@
 <script setup>
-import { reactive, onMounted, ref } from "vue";
-import { ElForm, ElFormItem, ElButton, ElInput, ElText } from "element-plus";
-import { CloseBold } from "@element-plus/icons-vue";
+import { reactive, onMounted, ref, computed } from "vue";
 import { useUserStore } from "@/store/user";
 import { useRoute } from "vue-router";
+import {
+  ElAvatar,
+  ElBreadcrumb,
+  ElBreadcrumbItem,
+  ElButton,
+  ElCard,
+  ElDivider,
+  ElIcon,
+} from "element-plus";
+import { useAuthStore } from "@/store/auth";
 
 const route = useRoute();
 const userApi = useUserStore();
-const userId = ref(route?.params?.id || localStorage.getItem('userId'));
+const authApi = useAuthStore();
+const userId = ref(route?.params?.id);
+const currentUserId = ref(authApi.user.id);
+const userData = reactive({});
 
-const form = reactive({
-  email: "",
-  name: "",
-  lastName: "",
-  phone: "",
-});
-
-const save = async () => {
-  try {
-    await userApi.updateUserData({ id: userId.value, ...form });
-  } catch (error) {
-    console.error("Ошибка при обновлении пользователя:", error.message);
-  }
-};
+const isEditable = computed(() => userId.value == currentUserId.value);
 
 const load = async () => {
   try {
     const data = await userApi.loadUserData(userId.value);
-    
-    Object.assign(form, data);
+    Object.assign(userData, data);
   } catch (error) {
     console.error("Ошибка при получении пользователей:", error.message);
   }
@@ -40,22 +37,75 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ElForm label-width="auto">
-    <ElText class="mx-1" size="large">Информация о пользователе</ElText>
-    <ElFormItem label="Email">
-      <ElInput v-model="form.email" clearable :clear-icon="CloseBold" />
-    </ElFormItem>
-    <ElFormItem label="Name">
-      <ElInput v-model="form.name" clearable :clear-icon="CloseBold" />
-    </ElFormItem>
-    <ElFormItem label="Last name">
-      <ElInput v-model="form.lastName" clearable :clear-icon="CloseBold" />
-    </ElFormItem>
-    <ElFormItem label="Phone">
-      <ElInput v-model="form.phone" clearable :clear-icon="CloseBold" />
-    </ElFormItem>
-    <ElButton type="success" plain @click="save"> Сохранить </ElButton>
-  </ElForm>
+  <div class="profile-page">
+    <!-- Хлебные крошки -->
+    <ElBreadcrumb separator="/" class="breadcrumb">
+      <ElBreadcrumbItem :to="{ path: '/' }">Главная</ElBreadcrumbItem>
+      <ElBreadcrumbItem :to="{ path: '/users' }">Пользователи</ElBreadcrumbItem>
+      <ElBreadcrumbItem>{{ userData.name }}</ElBreadcrumbItem>
+    </ElBreadcrumb>
+
+    <!-- Основная информация -->
+    <ElCard class="profile-card" shadow="never">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <ElAvatar :size="100" :src="userData.avatarUrl">
+            {{ userData.name }}
+          </ElAvatar>
+
+          <!-- <ElButton @click="chooseFile"> Изменить </ElButton>
+
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            class="file-input"
+            @change="handleFileSelect"
+          /> -->
+        </div>
+
+        <div class="profile-info">
+          <h1 class="profile-name">
+            {{ userData.name }} {{ userData.lastName }}
+          </h1>
+        </div>
+
+        <div class="profile-actions">
+          <ElButton v-if="isEditable" @click="editUser">
+            <ElIcon>
+              <Edit />
+            </ElIcon>
+            Редактировать
+          </ElButton>
+        </div>
+      </div>
+
+      <!-- Детали -->
+      <ElDivider />
+
+      <div class="profile-details">
+        <ElRow :gutter="20">
+          <ElCol :span="12">
+            <div class="detail-item">
+              <span class="detail-label">Email:</span>
+              <span class="detail-value">{{ userData.email }}</span>
+            </div>
+          </ElCol>
+
+          <ElCol :span="12">
+            <div class="detail-item">
+              <span class="detail-label">Телефон:</span>
+              <span class="detail-value">{{
+                userData.phone || "Не указан"
+              }}</span>
+            </div>
+          </ElCol>
+        </ElRow>
+      </div>
+    </ElCard>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@import "@/assets/styles/components/profiles.css";
+</style>

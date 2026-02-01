@@ -14,21 +14,24 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useChefStore } from "@/store/chef";
 import { useUserStore } from "@/store/user";
+import { useAuthStore } from "@/store/auth";
 
 const fileInput = ref();
 const route = useRoute();
 const router = useRouter();
-const userId = ref(route?.params?.id || localStorage.getItem("userId"));
+const chefUserId = ref(route?.params?.id);
 const chefApi = useChefStore();
 const userApi = useUserStore();
+const authApi = useAuthStore();
 
+const userId = ref(authApi.user.id);
 const chef = ref({});
 
 const load = async () => {
   try {
     chef.value = {};
 
-    chef.value = await chefApi.getChefByUserId(userId.value);
+    chef.value = await chefApi.getChefByUserId(chefUserId.value);
   } catch (error) {}
 };
 
@@ -42,7 +45,7 @@ const handleFileSelect = async (event) => {
   if (file) {
     const formData = new FormData();
 
-    formData.append("userId", userId.value);
+    formData.append("userId", chefUserId.value);
     formData.append("file", file);
 
     await userApi.setUserAvatar(formData);
@@ -67,7 +70,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="chef-page">
+  <div class="profile-page">
     <!-- Хлебные крошки -->
     <ElBreadcrumb separator="/" class="breadcrumb">
       <ElBreadcrumbItem :to="{ path: '/' }">Главная</ElBreadcrumbItem>
@@ -76,9 +79,9 @@ onMounted(async () => {
     </ElBreadcrumb>
 
     <!-- Основная информация -->
-    <ElCard class="chef-card" shadow="never">
-      <div class="chef-header">
-        <div class="chef-avatar">
+    <ElCard class="profile-card" shadow="never">
+      <div class="profile-header">
+        <div class="profile-avatar">
           <ElAvatar :size="100" :src="chef.avatarUrl">
             {{ chef.name }}
           </ElAvatar>
@@ -94,10 +97,10 @@ onMounted(async () => {
           />
         </div>
 
-        <div class="chef-info">
-          <h1 class="chef-name">{{ chef.name }} {{ chef.lastName }}</h1>
+        <div class="profile-info">
+          <h1 class="profile-name">{{ chef.name }} {{ chef.lastName }}</h1>
 
-          <div class="chef-stats">
+          <div class="profile-stats">
             <el-tag
               :type="chef.isActive ? 'success' : 'info'"
               class="status-tag"
@@ -118,7 +121,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="chef-actions">
+        <div class="profile-actions">
           <ElButton v-if="!chef.isActive" type="primary" @click="activateChef">
             Активировать кухню
           </ElButton>
@@ -139,7 +142,7 @@ onMounted(async () => {
       <!-- Детали -->
       <el-divider />
 
-      <div class="chef-details">
+      <div class="profile-details">
         <ElRow :gutter="20">
           <ElCol :span="12">
             <div class="detail-item">
@@ -200,155 +203,5 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.chef-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.breadcrumb {
-  margin-bottom: 20px;
-}
-
-.chef-card {
-  margin-bottom: 20px;
-}
-
-.chef-header {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
-
-.chef-avatar {
-  flex-shrink: 0;
-}
-
-.chef-info {
-  flex: 1;
-}
-
-.chef-name {
-  margin: 0 0 15px 0;
-  font-size: 28px;
-  color: #333;
-}
-
-.chef-stats {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.status-tag {
-  font-size: 14px;
-  padding: 6px 12px;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.total-orders {
-  color: #666;
-  font-size: 14px;
-}
-
-.chef-actions {
-  flex-shrink: 0;
-}
-
-.chef-details {
-  margin-bottom: 30px;
-}
-
-.detail-item {
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-}
-
-.detail-label {
-  font-weight: 600;
-  color: #333;
-  min-width: 150px;
-  margin-right: 10px;
-}
-
-.detail-value {
-  color: #666;
-}
-
-.description-section {
-  margin-top: 30px;
-}
-
-.description-section h3 {
-  margin: 0 0 10px 0;
-  color: #333;
-  font-size: 18px;
-}
-
-.description-text {
-  color: #666;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.no-description {
-  color: #999;
-  font-style: italic;
-  margin: 0;
-}
-
-.coming-soon {
-  margin-top: 20px;
-}
-
-.coming-soon h3 {
-  margin: 0 0 10px 0;
-  color: #333;
-}
-
-.coming-soon p {
-  color: #666;
-  margin: 0;
-}
-
-.file-input {
-  display: none;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .chef-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-
-  .chef-stats {
-    justify-content: center;
-  }
-
-  .chef-actions {
-    width: 100%;
-  }
-
-  .chef-actions .el-button {
-    width: 100%;
-  }
-
-  .detail-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .detail-label {
-    margin-bottom: 5px;
-  }
-}
+@import "@/assets/styles/components/profiles.css";
 </style>

@@ -7,16 +7,6 @@ const routes = [{
         }
     },
     {
-        path: '/users/:id',
-        name: 'user-detail',
-        component: () => import('@/views/UserDetailsView.vue'),
-        meta: {
-            requiresAuth: true,
-            title: 'Пользователь'
-        },
-        props: true
-    },
-    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/public/LoginView.vue'),
@@ -42,6 +32,26 @@ const routes = [{
             requiresAuth: true,
             title: 'Пользователи'
         }
+    },
+    {
+        path: '/users/:id',
+        name: 'user-detail',
+        component: () => import('@/views/UserDetailsView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: 'Пользователь'
+        },
+        props: true
+    },
+    {
+        path: '/users/edit:id',
+        name: 'user-edit',
+        component: () => import('@/views/UserEditView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: 'Пользователь'
+        },
+        props: true
     },
     {
         path: '/dishes',
