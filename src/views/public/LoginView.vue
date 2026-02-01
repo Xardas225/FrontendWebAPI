@@ -6,8 +6,6 @@ import {
   ElInput,
   ElText,
   ElRow,
-  ElTabs,
-  ElTabPane,
   ElRadioGroup,
   ElRadio,
 } from "element-plus";

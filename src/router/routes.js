@@ -71,6 +71,16 @@ const routes = [{
         },
         props: true
     },
+    {
+        path: '/chefs/edit/:id',
+        name: 'chef-edit',
+        component: () => import('@/views/ChefEditView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: 'Шеф'
+        },
+        props: true
+    },
 ]
 
 export default routes

@@ -39,8 +39,27 @@ export const useChefStore = defineStore('chef', () => {
         }
     }
 
+    const updateChefByUserId = async (requestData) => {
+        try {
+            console.log(requestData);
+            
+            const {
+                data
+            } = await api.patch(`/chefs/${requestData.userId}`, requestData)
+
+            return data
+        } catch (error) {
+            console.log(error.message)
+            return {
+                success: false,
+                error: this.error
+            }
+        }
+    }
+
     return {
         loadAllChefs,
-        getChefByUserId
+        getChefByUserId,
+        updateChefByUserId
     }
 })

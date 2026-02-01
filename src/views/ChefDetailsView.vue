@@ -8,14 +8,16 @@ import {
   ElRate,
   ElRow,
   ElCard,
+  ElIcon,
 } from "element-plus";
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useChefStore } from "@/store/chef";
 import { useUserStore } from "@/store/user";
 
 const fileInput = ref();
 const route = useRoute();
+const router = useRouter();
 const userId = ref(route?.params?.id || localStorage.getItem("userId"));
 const chefApi = useChefStore();
 const userApi = useUserStore();
@@ -44,8 +46,19 @@ const handleFileSelect = async (event) => {
     formData.append("file", file);
 
     await userApi.setUserAvatar(formData);
-    await load(); 
+    await load();
   }
+};
+
+const isEditable = computed(() => userId.value == chef.value.userId);
+
+const editKitchen = () => {
+  router.push({
+    name: "chef-edit",
+    params: {
+      id: userId.value,
+    },
+  });
 };
 
 onMounted(async () => {
@@ -106,22 +119,19 @@ onMounted(async () => {
         </div>
 
         <div class="chef-actions">
-          <ElButton
-            v-if="!chef.isActive"
-            type="primary"
-            @click="activateChef"
-            :loading="activating"
-          >
+          <ElButton v-if="!chef.isActive" type="primary" @click="activateChef">
             Активировать кухню
           </ElButton>
 
-          <ElButton
-            v-else
-            type="warning"
-            @click="deactivateChef"
-            :loading="deactivating"
-          >
+          <ElButton v-else type="warning" @click="deactivateChef">
             Деактивировать кухню
+          </ElButton>
+
+          <ElButton v-if="isEditable" @click="editKitchen">
+            <ElIcon>
+              <Edit />
+            </ElIcon>
+            Редактировать
           </ElButton>
         </div>
       </div>
