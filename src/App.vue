@@ -4,15 +4,8 @@ import {
   ElContainer,
   ElMain,
 } from "element-plus";
-import { useAuthStore } from "./store/auth";
-import { onMounted } from "vue";
 import HeaderComponent from "./components/HeaderComponent.vue";
 
-const authApi = useAuthStore();
-  
-onMounted(() => {
-  authApi.initialize();
-});
 </script>
 
 <template>

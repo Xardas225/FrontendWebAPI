@@ -31,7 +31,7 @@ export const useChefStore = defineStore('chef', () => {
 
             return data
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
             return {
                 success: false,
                 error: this.error
@@ -42,7 +42,7 @@ export const useChefStore = defineStore('chef', () => {
     const updateChefByUserId = async (requestData) => {
         try {
             console.log(requestData);
-            
+
             const {
                 data
             } = await api.patch(`/chefs/${requestData.userId}`, requestData)
@@ -62,4 +62,6 @@ export const useChefStore = defineStore('chef', () => {
         getChefByUserId,
         updateChefByUserId
     }
+}, {
+    persist: true
 })

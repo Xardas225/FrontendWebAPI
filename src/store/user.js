@@ -83,4 +83,6 @@ export const useUserStore = defineStore('user', () => {
         loadAllUsers,
         setUserAvatar
     }
+}, {
+    persist: true
 })

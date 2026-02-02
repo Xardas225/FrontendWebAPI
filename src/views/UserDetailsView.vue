@@ -8,12 +8,16 @@ import {
   ElBreadcrumbItem,
   ElButton,
   ElCard,
+  ElCol,
   ElDivider,
   ElIcon,
+  ElRow,
 } from "element-plus";
 import { useAuthStore } from "@/store/auth";
+import { useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 const userApi = useUserStore();
 const authApi = useAuthStore();
 const userId = ref(route?.params?.id);
@@ -30,6 +34,15 @@ const load = async () => {
     console.error("Ошибка при получении пользователей:", error.message);
   }
 };
+
+const editUser = () => {
+  router.push({
+    name: "user-edit",
+    params: {
+      id: userId.value
+    }
+  })
+}
 
 onMounted(async () => {
   await load();

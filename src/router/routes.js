@@ -44,7 +44,7 @@ const routes = [{
         props: true
     },
     {
-        path: '/users/edit:id',
+        path: '/users/edit/:id',
         name: 'user-edit',
         component: () => import('@/views/UserEditView.vue'),
         meta: {

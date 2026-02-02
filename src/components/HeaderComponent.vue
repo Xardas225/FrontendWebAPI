@@ -14,18 +14,16 @@ import {
 } from "element-plus";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 
 const router = useRouter();
 const isAuthenticated = computed(() => authApi.isAuthenticated);
 const authApi = useAuthStore();
-const userData = ref(authApi.user);
+const userData = computed(() => authApi.user);
 
 const routeToProfile = () => {
   const role = userData.value.role;
   const userId = userData.value.id;
-
-  console.log(userId, role);
 
   if (role == 0) {
     router.push({
@@ -57,6 +55,10 @@ const logout = async () => {
     console.error(error.message);
   }
 };
+
+onMounted(() => {
+  authApi.initialize();
+});
 </script>
 
 <template>
