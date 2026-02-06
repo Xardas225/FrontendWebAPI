@@ -13,6 +13,7 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { useAuthStore } from "@/store/auth";
 import { useUserStore } from "@/store/user";
 import { useRoute } from "vue-router";
+import { useNotification } from "@/composables/useNotification";
 
 const route = useRoute();
 const userId = ref(route?.params?.id);
@@ -35,8 +36,10 @@ const save = async () => {
     isLoading.value = true;
     await userApi.updateUserData({ id: userId.value, ...form });
     await load();
+    useNotification("Успех", "Данные успешно обновлены", "success");
   } catch (error) {
-    console.error("Ошибка при обновлении пользователя:", error.message);
+    useNotification("Неудачно", "Ошибка при обновлении данных", "error");
+    console.error("Ошибка при обновлении данных пользователя", error.message);
   } finally {
     isLoading.value = false;
   }
@@ -46,10 +49,10 @@ const load = async () => {
   try {
     isLoading.value = true;
     const data = await userApi.loadUserData(userId.value);
-    console.log(data);
     Object.assign(form, data);
   } catch (error) {
-    console.error("Ошибка при обновлении пользователя:", error.message);
+    useNotification("Неудачно", "Ошибка при получении данных", "error");
+    console.error("Ошибка при получении данных пользователя", error.message);
   } finally {
     isLoading.value = false;
   }
@@ -80,7 +83,7 @@ onMounted(async () => {
         <ElFormItem label="Last name" label-position="top">
           <ElInput v-model="form.lastName" clearable :clear-icon="CloseBold" />
         </ElFormItem>
-            <ElFormItem label="Phone" label-position="top">
+        <ElFormItem label="Phone" label-position="top">
           <ElInput v-model="form.phone" clearable :clear-icon="CloseBold" />
         </ElFormItem>
         <ElButton v-if="isEditable" type="success" plain @click="save">

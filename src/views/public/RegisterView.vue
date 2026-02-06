@@ -13,6 +13,7 @@ import { CloseBold } from "@element-plus/icons-vue";
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
+import { useNotification } from "@/composables/useNotification";
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -40,6 +41,7 @@ const save = async () => {
         name: "login",
       });
     }
+    useNotification("Успех", "Вы зарегистрировались в системе", "success");
   } catch (error) {
     console.error(error.message);
   }

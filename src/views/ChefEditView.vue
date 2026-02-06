@@ -15,6 +15,7 @@ import {
   ElTimeSelect,
 } from "element-plus";
 import { CloseBold } from "@element-plus/icons-vue";
+import { useNotification } from "@/composables/useNotification";
 
 const route = useRoute();
 const chefApi = useChefStore();
@@ -45,7 +46,10 @@ const load = async () => {
     chef.value = {};
 
     chef.value = await chefApi.getChefByUserId(chefUserId.value);
-  } catch (error) {}
+  } catch (error) {
+    useNotification("Неудачно", "Ошибка при получении данных", "error");
+    console.error("Ошибка при получении данных шефа:", error.message);
+  }
 };
 
 const save = async () => {
@@ -66,7 +70,11 @@ const save = async () => {
     chef.value = await chefApi.updateChefByUserId(requestData);
 
     await load();
-  } catch (error) {}
+    useNotification("Успех", "Данные успешно обновлены", "success");
+  } catch (error) {
+    useNotification("Неудачно", "Ошибка при обновлении данных", "error")
+    console.error("Ошибка при обновлении данных шефа", error.message);
+  }
 };
 
 onMounted(async () => {

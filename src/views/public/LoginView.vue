@@ -13,6 +13,7 @@ import { CloseBold } from "@element-plus/icons-vue";
 import { reactive } from "vue";
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "vue-router";
+import { useNotification } from "@/composables/useNotification";
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -31,6 +32,7 @@ const login = async () => {
         name: "home",
       });
     }
+    useNotification("Успех", "Вы вошли в систему", "success")
   } catch (error) {
     console.error(error.message);
   }
