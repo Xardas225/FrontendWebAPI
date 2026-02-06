@@ -5,12 +5,14 @@ import { useChefStore } from "@/store/chef";
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
+  ElButton,
   ElForm,
   ElFormItem,
   ElInput,
   ElOption,
   ElRow,
   ElSelect,
+  ElSkeleton,
   ElText,
   ElTimeSelect,
 } from "element-plus";
@@ -21,6 +23,7 @@ const route = useRoute();
 const chefApi = useChefStore();
 const chef = ref({});
 const chefUserId = ref(route?.params?.id);
+const isLoading = ref(false);
 
 const chefExperienceOptions = [
   {
@@ -43,17 +46,21 @@ const chefExperienceOptions = [
 
 const load = async () => {
   try {
+    isLoading.value = true;
     chef.value = {};
 
     chef.value = await chefApi.getChefByUserId(chefUserId.value);
   } catch (error) {
     useNotification("Неудачно", "Ошибка при получении данных", "error");
     console.error("Ошибка при получении данных шефа:", error.message);
+  } finally {
+    isLoading.value = false;
   }
 };
 
 const save = async () => {
   try {
+    isLoading.value = true;
     const requestData = {
       userId: chefUserId.value,
       email: chef.value.email,
@@ -72,8 +79,10 @@ const save = async () => {
     await load();
     useNotification("Успех", "Данные успешно обновлены", "success");
   } catch (error) {
-    useNotification("Неудачно", "Ошибка при обновлении данных", "error")
+    useNotification("Неудачно", "Ошибка при обновлении данных", "error");
     console.error("Ошибка при обновлении данных шефа", error.message);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -91,75 +100,90 @@ onMounted(async () => {
       <ElBreadcrumbItem>{{ chef.name }}</ElBreadcrumbItem>
       <ElBreadcrumbItem>Редактирование</ElBreadcrumbItem>
     </ElBreadcrumb>
-    <ElForm label-width="auto" class="edit-page">
-      <ElRow justify="center" class="row">
-        <ElText class="mx-1" size="large">Редактирование</ElText>
-      </ElRow>
 
-      <ElFormItem label-position="top" label="Email">
-        <ElInput v-model="chef.email" clearable :clear-icon="CloseBold" />
-      </ElFormItem>
+    <template v-if="isLoading">
+      <ElSkeleton rows="5" animated />
+    </template>
 
-      <ElFormItem label-position="top" label="Name">
-        <ElInput v-model="chef.name" clearable :clear-icon="CloseBold" />
-      </ElFormItem>
+    <template v-else>
+      <ElForm label-width="auto" class="edit-page">
+        <ElRow justify="center" class="row">
+          <ElText class="mx-1" size="large">Редактирование</ElText>
+        </ElRow>
 
-      <ElFormItem label-position="top" label="Last Name">
-        <ElInput v-model="chef.lastName" clearable :clear-icon="CloseBold" />
-      </ElFormItem>
+        <ElFormItem label-position="top" label="Email">
+          <ElInput v-model="chef.email" clearable :clear-icon="CloseBold" />
+        </ElFormItem>
 
-      <ElFormItem label-position="top" label="Phone">
-        <ElInput v-model="chef.phone" clearable :clear-icon="CloseBold" />
-      </ElFormItem>
+        <ElFormItem label-position="top" label="Name">
+          <ElInput v-model="chef.name" clearable :clear-icon="CloseBold" />
+        </ElFormItem>
 
-      <ElFormItem label-position="top" label="Kitchen Name">
-        <ElInput v-model="chef.kitchenName" clearable :clear-icon="CloseBold" />
-      </ElFormItem>
+        <ElFormItem label-position="top" label="Last Name">
+          <ElInput v-model="chef.lastName" clearable :clear-icon="CloseBold" />
+        </ElFormItem>
 
-      <ElFormItem label-position="top" label="Description">
-        <ElInput v-model="chef.description" clearable :clear-icon="CloseBold" />
-      </ElFormItem>
+        <ElFormItem label-position="top" label="Phone">
+          <ElInput v-model="chef.phone" clearable :clear-icon="CloseBold" />
+        </ElFormItem>
 
-      <ElFormItem label-position="top" label="Start/End Time">
-        <div class="time-select-container">
-          <ElTimeSelect
-            v-model="chef.startTime"
-            placeholder="Start time"
-            :max-time="chef.endTime"
-            start="08:00"
-            step="00:30"
-            end="21:00"
+        <ElFormItem label-position="top" label="Kitchen Name">
+          <ElInput
+            v-model="chef.kitchenName"
+            clearable
             :clear-icon="CloseBold"
           />
-          <ElTimeSelect
-            v-model="chef.endTime"
-            placeholder="End time"
-            :min-time="chef.startTime"
-            start="08:00"
-            step="00:30"
-            end="21:00"
+        </ElFormItem>
+
+        <ElFormItem label-position="top" label="Description">
+          <ElInput
+            v-model="chef.description"
+            clearable
             :clear-icon="CloseBold"
           />
-        </div>
-      </ElFormItem>
+        </ElFormItem>
 
-      <ElFormItem label-position="top" label="Chef Experience">
-        <ElSelect
-          v-model="chef.chefExperience"
-          clearable
-          :clear-icon="CloseBold"
-        >
-          <ElOption
-            v-for="item in chefExperienceOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </ElSelect>
-      </ElFormItem>
+        <ElFormItem label-position="top" label="Start/End Time">
+          <div class="time-select-container">
+            <ElTimeSelect
+              v-model="chef.startTime"
+              placeholder="Start time"
+              :max-time="chef.endTime"
+              start="08:00"
+              step="00:30"
+              end="21:00"
+              :clear-icon="CloseBold"
+            />
+            <ElTimeSelect
+              v-model="chef.endTime"
+              placeholder="End time"
+              :min-time="chef.startTime"
+              start="08:00"
+              step="00:30"
+              end="21:00"
+              :clear-icon="CloseBold"
+            />
+          </div>
+        </ElFormItem>
 
-      <ElButton type="success" plain @click="save"> Save </ElButton>
-    </ElForm>
+        <ElFormItem label-position="top" label="Chef Experience">
+          <ElSelect
+            v-model="chef.chefExperience"
+            clearable
+            :clear-icon="CloseBold"
+          >
+            <ElOption
+              v-for="item in chefExperienceOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </ElSelect>
+        </ElFormItem>
+
+        <ElButton type="success" plain @click="save"> Save </ElButton>
+      </ElForm>
+    </template>
   </div>
 </template>
 
