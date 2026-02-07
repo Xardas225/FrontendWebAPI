@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useChefStore } from "@/store/chef";
 import {
+  ElAvatar,
   ElBreadcrumb,
   ElBreadcrumbItem,
   ElButton,
@@ -18,12 +19,19 @@ import {
 } from "element-plus";
 import { CloseBold } from "@element-plus/icons-vue";
 import { useNotification } from "@/composables/useNotification";
+import { useAvatarManagement } from "@/composables/useAvatarManagement";
+import { useAuthStore } from "@/store/auth";
 
 const route = useRoute();
 const chefApi = useChefStore();
+const authApi = useAuthStore();
 const chef = ref({});
 const chefUserId = ref(route?.params?.id);
 const isLoading = ref(false);
+const userAvatarApi = useAvatarManagement();
+const fileInput = ref();
+const userId = authApi.user.id;
+
 
 const chefExperienceOptions = [
   {
@@ -86,6 +94,28 @@ const save = async () => {
   }
 };
 
+const chooseFile = () => {
+  fileInput.value.click();
+};
+
+const handleFileSelect = async (event) => {
+  const file = event.target.files[0];
+
+  if (!file) {
+    // Добавить ошибку
+    return;
+  }
+
+  try {
+    await userAvatarApi.uploadUserAvatar(userId, file);
+    await load();
+    useNotification("Успешно", "Файл загружен", "success");
+  } catch (error) {
+    console.error(error)
+    useNotification("Неудачно", "Ошибка при загрузке файла", "error");
+  }
+};
+
 onMounted(async () => {
   await load();
 });
@@ -107,9 +137,26 @@ onMounted(async () => {
 
     <template v-else>
       <ElForm label-width="auto" class="edit-page">
-        <ElRow justify="center" class="row">
+        <ElRow justify="center">
           <ElText class="mx-1" size="large">Редактирование</ElText>
         </ElRow>
+
+        <ElRow justify="center" class="row">
+          <ElAvatar :size="100" :src="chef.avatarUrl">
+            {{ chef.name }}
+          </ElAvatar>
+        </ElRow>
+        <ElRow justify="center" class="row">
+          <ElButton @click="chooseFile"> Изменить </ElButton>
+          </ElRow>
+
+        <input
+          ref="fileInput"
+          type="file"
+          accept="image/*"
+          class="file-input"
+          @change="handleFileSelect"
+        ></input>
 
         <ElFormItem label-position="top" label="Email">
           <ElInput v-model="chef.email" clearable :clear-icon="CloseBold" />
@@ -196,5 +243,11 @@ onMounted(async () => {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+}
+.file-input {
+  display: none;
+}
+.row {
+  margin: 10px;
 }
 </style>

@@ -14,21 +14,17 @@ import {
 import { ref, onMounted, computed, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useChefStore } from "@/store/chef";
-import { useUserStore } from "@/store/user";
 import { useAuthStore } from "@/store/auth";
 import { useNotification } from "@/composables/useNotification";
 import BreadcrumbComponent from "@/components/BreadcrumbComponent.vue";
 
-
-const fileInput = ref();
 const route = useRoute();
 const router = useRouter();
-const chefUserId = ref(route?.params?.id);
 const chefApi = useChefStore();
-const userApi = useUserStore();
 const authApi = useAuthStore();
+const chefUserId = ref(route.params.id);
 
-const userId = ref(authApi.user.id);
+const userId = authApi.user.id;
 const chef = ref({});
 const isLoading = ref(false);
 
@@ -47,7 +43,6 @@ const breadcrumbItems = reactive([
   },
 ]);
 
-
 const load = async () => {
   try {
     chef.value = {};
@@ -58,31 +53,13 @@ const load = async () => {
   }
 };
 
-const chooseFile = () => {
-  fileInput.value.click();
-};
+const isEditable = computed(() => userId == chef.value.userId);
 
-const handleFileSelect = async (event) => {
-  const file = event.target.files[0];
-
-  if (file) {
-    const formData = new FormData();
-
-    formData.append("userId", chefUserId.value);
-    formData.append("file", file);
-
-    await userApi.setUserAvatar(formData);
-    await load();
-  }
-};
-
-const isEditable = computed(() => userId.value == chef.value.userId);
-
-const editKitchen = () => {
+const routeToEditKitchen = () => {
   router.push({
     name: "chef-edit",
     params: {
-      id: userId.value,
+      id: userId,
     },
   });
 };
@@ -110,16 +87,6 @@ onMounted(async () => {
             <ElAvatar :size="100" :src="chef.avatarUrl">
               {{ chef.name }}
             </ElAvatar>
-
-            <ElButton @click="chooseFile"> Изменить </ElButton>
-
-            <input
-              ref="fileInput"
-              type="file"
-              accept="image/*"
-              class="file-input"
-              @change="handleFileSelect"
-            />
           </div>
 
           <div class="profile-info">
@@ -161,7 +128,7 @@ onMounted(async () => {
               Деактивировать кухню
             </ElButton>
 
-            <ElButton v-if="isEditable" @click="editKitchen">
+            <ElButton v-if="isEditable" @click="routeToEditKitchen">
               <ElIcon>
                 <Edit />
               </ElIcon>
