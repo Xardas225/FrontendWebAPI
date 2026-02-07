@@ -18,8 +18,20 @@ export const useDishStore = defineStore('dish', () => {
         }
     }
 
+
+    const createNewDish = async (data) => {
+        try {
+            await api.post('/dishes', data);
+
+            return data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return {
-        getAllDishes
+        getAllDishes,
+        createNewDish
     }
 
 }, {

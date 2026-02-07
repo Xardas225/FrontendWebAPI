@@ -12,6 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
     const token = ref(null);
 
     const isAuthenticated = computed(() => !!token.value)
+    const isChef = computed(() => user.value.role == 1)
 
     // Восстановление состояния из localStorage при создании store
     const initialize = () => {
@@ -103,7 +104,8 @@ export const useAuthStore = defineStore('auth', () => {
         register,
         logout,
         isAuthenticated,
-        initialize
+        initialize,
+        isChef
     }
 
 }, {

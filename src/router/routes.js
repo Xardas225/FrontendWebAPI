@@ -63,6 +63,15 @@ const routes = [{
         }
     },
     {
+        path: '/dishes/create',
+        name: 'dishes-create',
+        component: () => import('@/views/DishCreateView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: 'Создание блюда'
+        }
+    },
+    {
         path: '/chefs',
         name: 'chefs',
         component: () => import('@/views/ChefListView.vue'),

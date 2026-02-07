@@ -10,9 +10,14 @@ import {
 import { onMounted, ref } from "vue";
 import { useNotification } from "@/composables/useNotification";
 import { useDishStore } from "@/store/dish";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/store/auth";
 
 const dishes = ref([]);
 const dishApi = useDishStore();
+const authApi = useAuthStore();
+const router = useRouter();
+const isChef = authApi.isChef;
 
 const load = async () => {
   try {
@@ -25,12 +30,25 @@ const load = async () => {
   }
 };
 
+const routeToCreateDish = () => {
+  router.push({
+    name: "dishes-create",
+  });
+};
+
 onMounted(async () => {
   await load();
 });
 </script>
 
 <template>
+  <ElButton v-if="isChef" @click="routeToCreateDish">
+    <ElIcon>
+      <Plus />
+    </ElIcon>
+    Добавить блюдо
+  </ElButton>
+
   <div class="cards-container">
     <ElCard v-for="item in dishes" :key="item.id" class="dis-card">
       <template #header>
