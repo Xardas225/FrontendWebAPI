@@ -7,50 +7,32 @@ import {
   ElIcon,
   ElTag,
 } from "element-plus";
+import { onMounted, ref } from "vue";
+import { useNotification } from "@/composables/useNotification";
+import { useDishStore } from "@/store/dish";
 
-const mockData = [
-  {
-    id: 0,
-    name: "Dish name",
-    description: "Description dish",
-    category: "Soup",
-    kitchen: "Russian",
-    price: 1000,
-    currency: "RUB",
-  },
-  {
-    id: 1,
-    name: "Dish name",
-    description: "Description dish",
-    category: "Soup",
-    kitchen: "Russian",
-    price: 1000,
-    currency: "RUB",
-  },
-  {
-    id: 2,
-    name: "Dish name",
-    description: "Description dish",
-    category: "Soup",
-    kitchen: "Russian",
-    price: 1000,
-    currency: "RUB",
-  },
-  {
-    id: 3,
-    name: "Dish name",
-    description: "Description dish",
-    category: "Soup",
-    kitchen: "Russian",
-    price: 1000,
-    currency: "RUB",
-  },
-];
+const dishes = ref([]);
+const dishApi = useDishStore();
+
+const load = async () => {
+  try {
+    dishes.value = [];
+    const data = await dishApi.getAllDishes();
+
+    dishes.value = data;
+  } catch (error) {
+    useNotification("Неудачно", "Данные по блюдам не загрузились", "error");
+  }
+};
+
+onMounted(async () => {
+  await load();
+});
 </script>
 
 <template>
   <div class="cards-container">
-    <ElCard v-for="item in mockData" :key="item.id" class="dis-card">
+    <ElCard v-for="item in dishes" :key="item.id" class="dis-card">
       <template #header>
         <div class="card-header">
           <span class="card-name">{{ item.name }}</span>

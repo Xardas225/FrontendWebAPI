@@ -57,7 +57,7 @@ onMounted(async () => {
           <div class="card-header">
             <span class="card-name">{{ item.name }} {{ item.lastName }}</span>
             <ElAvatar :size="100" :src="item.avatarUrl">
-              {{ chef.name }}
+              {{ item.name }}
             </ElAvatar>
           </div>
         </template>
