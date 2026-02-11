@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
             console.error('Login error:', error)
             return {
                 success: false,
-                error: error.response.data.message || error.message
+                error: error.message
             }
         }
     }
@@ -83,7 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
             console.error('Logout error:', error)
             return {
                 success: false,
-                error: error.response.data.message || error.message
+                error: error.message
             }
         }
     }

@@ -9,15 +9,22 @@ import {
   ElOption,
   ElSelect,
 } from "element-plus";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useDishStore } from "@/store/dish";
 import { useAuthStore } from "@/store/auth";
+import { useNotification } from "@/composables/useNotification";
+import { categories, kitchens, ingredients } from "@/constants/dish";
 
 const dishApi = useDishStore();
 const authApi = useAuthStore();
 
 const userId = authApi.user?.id;
 const isChef = authApi.isChef;
+
+const ingredient = ref({
+  name: "",
+  weight: "",
+});
 
 const dishForm = reactive({
   name: "",
@@ -26,29 +33,39 @@ const dishForm = reactive({
   kitchen: "",
   price: 0,
   currency: 0,
+  ingredients: [],
 });
 
 const submitForm = async () => {
   try {
     await dishApi.createNewDish({ ...dishForm, userId });
+    useNotification("Успешно", "Блюдо успешно добавлено", "success");
+    // Добавить редирект на блюдо
   } catch (error) {
     console.log(error);
+    useNotification("Неудачно", "Блюдо не добавлено", "error");
   }
 };
 
-const categories = [
-  {
-    label: "Soup",
-    value: "Soup",
-  },
-];
+const addIngredient = () => {
+  if (!ingredient.value.name || !ingredient.value.weight) {
+    useNotification("Неудачно", "Заполните поля ингредиента", "error");
+    return;
+  }
 
-const kitchens = [
-  {
-    label: "Russian",
-    value: "Russian",
-  },
-];
+  const newIngredient = {
+    id: Date.now() + Math.random(),
+    name: ingredient.value.name,
+    weight: ingredient.value.weight,
+  };
+
+  dishForm.ingredients.push(newIngredient);
+
+  ingredient.value = {
+    name: "",
+    weight: "",
+  };
+};
 </script>
 
 <template>
@@ -157,7 +174,78 @@ const kitchens = [
               <ElOption label="₴ UAH" value="UAH" />
             </ElSelect>
           </ElFormItem>
+
+          <ElFormItem
+            label="Время приготовления (мин.)"
+            prop="cookTime"
+            class="form-item"
+          >
+            <ElInputNumber
+              v-model="dishForm.cookTime"
+              :min="0"
+              :max="1000"
+              :step="5"
+              controls-position="right"
+              placeholder="Время приготовления"
+              size="large"
+              class="full-width"
+            />
+          </ElFormItem>
         </div>
+
+        <ElFormItem label="Ингредиенты" prop="ingredients" class="form-item">
+          <div class="ingredient-row">
+            <ElSelect
+              v-model="ingredient.name"
+              placeholder="Выберите ингредиент"
+              filterable
+              clearable
+              size="large"
+              class="full-width"
+            >
+              <ElOption
+                v-for="item in ingredients"
+                :key="item.value"
+                :label="item.label"
+                :value="item.label"
+              />
+            </ElSelect>
+
+            <ElInputNumber
+              v-model="ingredient.weight"
+              :min="0"
+              :max="10000"
+              :step="10"
+              controls-position="right"
+              placeholder="Количество"
+              size="large"
+              class="full-width"
+            />
+          </div>
+
+          <ElButton class="ingredient-add" @click="addIngredient">
+            Добавить ингредиент
+          </ElButton>
+
+          <template v-if="dishForm.ingredients?.length">
+            <div class="ingredient-list">
+              <span class="ingredient-list-title"> Список ингредиентов: </span>
+
+              <div
+                class="ingredient-list-item"
+                v-for="item in dishForm.ingredients"
+                :key="item.id"
+              >
+                <span class="ingredient-list-item-name">
+                  Название: {{ item.name }}
+                </span>
+                <span class="ingredient-list-item-weight">
+                  Граммовка: {{ item.weight }}
+                </span>
+              </div>
+            </div>
+          </template>
+        </ElFormItem>
 
         <div class="form-actions">
           <ElButton
@@ -215,6 +303,11 @@ const kitchens = [
 
 .form-item {
   margin-bottom: 0;
+}
+
+.form-item .ingredient-add {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .form-item :deep(.el-form-item__label) {
@@ -367,6 +460,89 @@ const kitchens = [
   word-wrap: break-word;
 }
 
+.ingredient-list {
+  margin-top: 24px;
+  padding: 20px;
+  background-color: #fafcff;
+  border: 1px solid #e4e7ed;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.ingredient-list-title {
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #303133;
+  letter-spacing: 0.3px;
+}
+
+.ingredient-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.ingredient-row .el-select,
+.ingredient-row .el-input-number {
+  flex: 1;
+  min-width: 0;
+}
+
+.ingredient-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background-color: #ffffff;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.ingredient-list-item:hover {
+  border-color: #c0c4cc;
+  background-color: #f5f7fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ingredient-list-item-name {
+  font-size: 15px;
+  color: #2c3e50;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ingredient-list-item-name::before {
+  content: "•";
+  color: #409eff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.ingredient-list-item-weight {
+  font-size: 14px;
+  color: #606266;
+  background-color: #f0f2f5;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ingredient-list-item-weight::after {
+  content: "г";
+  font-size: 12px;
+  color: #909399;
+  margin-left: 2px;
+}
+
 @media (max-width: 992px) {
   .add-dish-container {
     grid-template-columns: 1fr;
@@ -397,6 +573,16 @@ const kitchens = [
 
   .preview-title {
     font-size: 18px;
+  }
+
+  .ingredient-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .ingredient-list-item-weight {
+    align-self: flex-end;
   }
 }
 
