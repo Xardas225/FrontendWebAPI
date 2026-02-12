@@ -9,11 +9,11 @@ import {
   ElOption,
   ElSelect,
 } from "element-plus";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useDishStore } from "@/store/dish";
 import { useAuthStore } from "@/store/auth";
 import { useNotification } from "@/composables/useNotification";
-import { categories, kitchens, ingredients } from "@/constants/dish";
+import { categories, kitchens } from "@/constants/dish";
 
 const dishApi = useDishStore();
 const authApi = useAuthStore();
@@ -21,10 +21,12 @@ const authApi = useAuthStore();
 const userId = authApi.user?.id;
 const isChef = authApi.isChef;
 
-const ingredient = ref({
-  name: "",
+const ingredients = ref([]);
+const initialIngredient = {
+  data: {},
   weight: "",
-});
+};
+const ingredient = reactive({ ...initialIngredient });
 
 const dishForm = reactive({
   name: "",
@@ -34,13 +36,14 @@ const dishForm = reactive({
   price: 0,
   currency: 0,
   ingredients: [],
+  cookTime: 0,
 });
 
 const submitForm = async () => {
   try {
     await dishApi.createNewDish({ ...dishForm, userId });
     useNotification("Успешно", "Блюдо успешно добавлено", "success");
-    // Добавить редирект на блюдо
+    // TODO: Добавить редирект на блюдо
   } catch (error) {
     console.log(error);
     useNotification("Неудачно", "Блюдо не добавлено", "error");
@@ -48,24 +51,35 @@ const submitForm = async () => {
 };
 
 const addIngredient = () => {
-  if (!ingredient.value.name || !ingredient.value.weight) {
+  if (!ingredient.data?.id || !ingredient.weight) {
     useNotification("Неудачно", "Заполните поля ингредиента", "error");
     return;
   }
 
   const newIngredient = {
-    id: Date.now() + Math.random(),
-    name: ingredient.value.name,
-    weight: ingredient.value.weight,
-  };
+    ...ingredient.data,
+    weight: ingredient.weight,
+    };
 
   dishForm.ingredients.push(newIngredient);
 
-  ingredient.value = {
-    name: "",
-    weight: "",
-  };
+  Object.assign(ingredient, initialIngredient);
 };
+
+const load = async () => {
+  try {
+    const { data } = await dishApi.getAllIngredients();
+
+    ingredients.value = data;
+  } catch (error) {
+    console.log(error);
+    useNotification("Неудачно", "Ингредиенты не загрузились", "error");
+  }
+};
+
+onMounted(async () => {
+  await load();
+});
 </script>
 
 <template>
@@ -196,7 +210,7 @@ const addIngredient = () => {
         <ElFormItem label="Ингредиенты" prop="ingredients" class="form-item">
           <div class="ingredient-row">
             <ElSelect
-              v-model="ingredient.name"
+              v-model="ingredient.data"
               placeholder="Выберите ингредиент"
               filterable
               clearable
@@ -206,8 +220,8 @@ const addIngredient = () => {
               <ElOption
                 v-for="item in ingredients"
                 :key="item.value"
-                :label="item.label"
-                :value="item.label"
+                :label="item.name"
+                :value="item"
               />
             </ElSelect>
 

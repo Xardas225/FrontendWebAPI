@@ -29,9 +29,21 @@ export const useDishStore = defineStore('dish', () => {
         }
     }
 
+
+    const getAllIngredients = async () => {
+        try {
+            const data = await api.get('/ingredients');
+
+            return data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return {
         getAllDishes,
-        createNewDish
+        createNewDish,
+        getAllIngredients
     }
 
 }, {
