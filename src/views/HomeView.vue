@@ -11,9 +11,6 @@ const handleFile = async (event) => {
     return;
   }
 
-  console.log(file);
-  
-
   try {
     const data = await visionServiceApi.detectFile(file);
     console.log(data);

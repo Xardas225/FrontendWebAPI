@@ -13,13 +13,15 @@ import { onMounted, reactive, ref } from "vue";
 import { useDishStore } from "@/store/dish";
 import { useAuthStore } from "@/store/auth";
 import { useNotification } from "@/composables/useNotification";
-import { categories, kitchens } from "@/constants/dish";
+import { categories } from "@/constants/dish";
 
 const dishApi = useDishStore();
 const authApi = useAuthStore();
 
 const userId = authApi.user?.id;
 const isChef = authApi.isChef;
+
+const kitchens = ref([]);
 
 const ingredients = ref([]);
 const initialIngredient = {
@@ -59,7 +61,7 @@ const addIngredient = () => {
   const newIngredient = {
     ...ingredient.data,
     weight: ingredient.weight,
-    };
+  };
 
   dishForm.ingredients.push(newIngredient);
 
@@ -68,9 +70,13 @@ const addIngredient = () => {
 
 const load = async () => {
   try {
-    const { data } = await dishApi.getAllIngredients();
+    const ingredientData = await dishApi.getAllIngredients();
 
-    ingredients.value = data;
+    ingredients.value = ingredientData?.data;
+
+    const kitchensData = await dishApi.getAllKitchens();
+
+    kitchens.value = kitchensData?.data;
   } catch (error) {
     console.log(error);
     useNotification("Неудачно", "Ингредиенты не загрузились", "error");
@@ -150,7 +156,7 @@ onMounted(async () => {
             <ElOption
               v-for="kitchen in kitchens"
               :key="kitchen.value"
-              :label="kitchen.label"
+              :label="kitchen.name"
               :value="kitchen.value"
             />
           </ElSelect>

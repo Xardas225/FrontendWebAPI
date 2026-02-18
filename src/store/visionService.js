@@ -12,8 +12,6 @@ export const useVisionService = defineStore('visionService', () => {
             const formData = new FormData()
             formData.append("file", file)
 
-            console.log(formData);
-
             const {
                 data
             } = await api.post(`/detection`, formData, {

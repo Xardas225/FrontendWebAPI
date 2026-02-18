@@ -40,10 +40,24 @@ export const useDishStore = defineStore('dish', () => {
         }
     }
 
+    const getAllKitchens = async () => {
+        try {
+            const data = await api.get('/kitchens');
+
+            return data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
+
     return {
         getAllDishes,
         createNewDish,
-        getAllIngredients
+        getAllIngredients,
+        getAllKitchens
     }
 
 }, {
