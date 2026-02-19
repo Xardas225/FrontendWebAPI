@@ -14,7 +14,7 @@ const isAuthenticated = () => {
   return !!token
 }
 
-
+// TODO: пофиксить переход на страницу логина и выход из системы
 // Глобальный навигационный хук
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)

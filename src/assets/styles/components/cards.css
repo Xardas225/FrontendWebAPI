@@ -1,10 +1,29 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 колонки */
-  gap: 24px; /* Расстояние между карточками */
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.filters-container {
+  width: 250px;
+}
+
+.filter-header {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  display: inline-block;
+}
+
+.filter-price {
 }
 
 .card {
@@ -15,7 +34,8 @@
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Все карточки одинаковой высоты */
+  height: 100%;
+  /* Все карточки одинаковой высоты */
 }
 
 .card:hover {
@@ -59,14 +79,16 @@
   color: #666;
   font-size: 14px;
   line-height: 1.5;
-  flex-grow: 1; /* Описание занимает доступное пространство */
+  flex-grow: 1;
+  /* Описание занимает доступное пространство */
 }
 
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; /* Прижимаем к низу */
+  margin-top: auto;
+  /* Прижимаем к низу */
 }
 
 .card-price {
@@ -97,7 +119,8 @@
 /* Адаптивность */
 @media (max-width: 1024px) {
   .cards-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 колонки на планшетах */
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 колонки на планшетах */
     gap: 20px;
     padding: 20px;
   }
@@ -105,7 +128,8 @@
 
 @media (max-width: 768px) {
   .cards-container {
-    grid-template-columns: 1fr; /* 1 колонка на мобильных */
+    grid-template-columns: 1fr;
+    /* 1 колонка на мобильных */
     gap: 16px;
     padding: 16px;
   }

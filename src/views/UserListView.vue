@@ -22,6 +22,7 @@ const loadAllUsers = async () => {
     }
   } catch (error) {
     console.error(error.message);
+    useNotification("Неудачно", "Данные по пользователям не загрузились", "error");
   } finally {
     isLoading.value = false;
   }
