@@ -13,7 +13,6 @@ import { onMounted, reactive, ref } from "vue";
 import { useDishStore } from "@/store/dish";
 import { useAuthStore } from "@/store/auth";
 import { useNotification } from "@/composables/useNotification";
-import { categories } from "@/constants/dish";
 
 const dishApi = useDishStore();
 const authApi = useAuthStore();
@@ -22,6 +21,7 @@ const userId = authApi.user?.id;
 const isChef = authApi.isChef;
 
 const kitchens = ref([]);
+const categories = ref([]);
 
 const ingredients = ref([]);
 const initialIngredient = {
@@ -71,12 +71,13 @@ const addIngredient = () => {
 const load = async () => {
   try {
     const ingredientData = await dishApi.getAllIngredients();
-
     ingredients.value = ingredientData?.data;
 
     const kitchensData = await dishApi.getAllKitchens();
-
     kitchens.value = kitchensData?.data;
+
+    const categoriesData = await dishApi.getAllCategories();
+    categories.value = categoriesData?.data;
   } catch (error) {
     console.log(error);
     useNotification("Неудачно", "Ингредиенты не загрузились", "error");
