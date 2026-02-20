@@ -13,6 +13,9 @@ import { onMounted, reactive, ref } from "vue";
 import { useDishStore } from "@/store/dish";
 import { useAuthStore } from "@/store/auth";
 import { useNotification } from "@/composables/useNotification";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const dishApi = useDishStore();
 const authApi = useAuthStore();
@@ -43,9 +46,15 @@ const dishForm = reactive({
 
 const submitForm = async () => {
   try {
-    await dishApi.createNewDish({ ...dishForm, userId });
+    const { data } = await dishApi.createNewDish({ ...dishForm, userId });
     useNotification("Успешно", "Блюдо успешно добавлено", "success");
-    // TODO: Добавить редирект на блюдо
+    
+    router.push({
+      name: "dishes-detail",
+      params: {
+        id: data.id
+      }
+    });
   } catch (error) {
     console.log(error);
     useNotification("Неудачно", "Блюдо не добавлено", "error");

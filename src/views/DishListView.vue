@@ -115,6 +115,15 @@ const applySort = async () => {
   }
 };
 
+const routeToDishDetails = (id) => {
+  router.push({
+    name: "dishes-detail",
+    params: {
+      id
+    }
+  });
+};
+
 onMounted(async () => {
   await load();
 });
@@ -261,7 +270,11 @@ onMounted(async () => {
     </template>
     <template v-else>
       <div class="cards-container">
-        <ElCard v-for="item in dishes" :key="item.id">
+        <ElCard
+          v-for="item in dishes"
+          :key="item.id"
+          @click="routeToDishDetails(item.id)"
+        >
           <template #header>
             <div class="card-header">
               <span class="card-name">{{ item.name }}</span>

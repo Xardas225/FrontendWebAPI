@@ -20,17 +20,25 @@ export const useDishStore = defineStore(
 
         return data;
       } catch (error) {
-        console.log(error);
+        throw { message: error.message, code: error?.code };
+      }
+    };
+
+    const getDishById = async (id) => {
+      try {
+        const data = await api.get(`/dishes/${id}`);
+        return data;
+      } catch (error) {
+        throw { message: error.message, code: error?.code };
       }
     };
 
     const createNewDish = async (data) => {
       try {
-        await api.post("/dishes", data);
-
-        return data;
+        const response = await api.post("/dishes", data);
+        return response;
       } catch (error) {
-        console.log(error);
+        throw { message: error.message, code: error?.code };
       }
     };
 
@@ -40,7 +48,7 @@ export const useDishStore = defineStore(
 
         return data;
       } catch (error) {
-        console.log(error);
+        throw { message: error.message, code: error?.code };
       }
     };
 
@@ -50,7 +58,7 @@ export const useDishStore = defineStore(
 
         return data;
       } catch (error) {
-        console.log(error);
+        throw { message: error.message, code: error?.code };
       }
     };
 
@@ -60,7 +68,7 @@ export const useDishStore = defineStore(
 
         return data;
       } catch (error) {
-        console.log(error);
+        throw { message: error.message, code: error?.code };
       }
     };
 
@@ -70,6 +78,7 @@ export const useDishStore = defineStore(
       getAllIngredients,
       getAllKitchens,
       getAllCategories,
+      getDishById
     };
   },
   {

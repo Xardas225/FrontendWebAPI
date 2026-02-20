@@ -72,6 +72,15 @@ const routes = [{
         }
     },
     {
+        path: '/dishes/:id',
+        name: 'dishes-detail',
+        component: () => import('@/views/DishDetailsView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: 'Просмотр блюда'
+        }
+    },
+    {
         path: '/chefs',
         name: 'chefs',
         component: () => import('@/views/ChefListView.vue'),
