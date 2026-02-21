@@ -1,12 +1,14 @@
 <script setup>
 import {
   ElAvatar,
+  ElBadge,
   ElButton,
   ElCol,
   ElDropdown,
   ElDropdownItem,
   ElDropdownMenu,
   ElHeader,
+  ElIcon,
   ElMenu,
   ElMenuItem,
   ElRow,
@@ -122,6 +124,24 @@ onMounted(() => {
 
     <template v-if="isAuthenticated">
       <div class="header-right">
+        <div class="header-icons">
+          <!-- TODO: добавить счётчик -->
+          <router-link to="/favorites" class="icon-link">
+            <ElBadge class="badge">
+              <ElIcon :size="20"><Star /></ElIcon>
+            </ElBadge>
+            <span class="icon-label">Избранное</span>
+          </router-link>
+
+          <!-- TODO: добавить счётчик -->
+          <router-link to="/cart" class="icon-link">
+            <ElBadge :max="99" class="badge">
+              <ElIcon :size="20"><ShoppingCart /></ElIcon>
+            </ElBadge>
+            <span class="icon-label">Корзина</span>
+          </router-link>
+        </div>
+
         <ElDropdown class="header-dropdown">
           <ElAvatar :size="40" :src="userData.avatarUrl" />
 
@@ -203,5 +223,48 @@ onMounted(() => {
 
 .router-link-exact-active {
   font-weight: 600;
+}
+
+.header-icons {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.icon-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.icon-link:hover {
+  color: #005bff; /* фирменный синий Ozon */
+}
+
+.badge {
+  display: inline-block;
+}
+
+:deep(.el-badge__content) {
+  background-color: #f50;
+  color: white;
+  border: none;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  min-width: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  font-weight: 500;
+}
+
+.icon-label {
+  font-size: 12px;
+  margin-top: 4px;
+  white-space: nowrap;
 }
 </style>

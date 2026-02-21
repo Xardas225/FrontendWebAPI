@@ -11,6 +11,7 @@ import {
   ElInput,
   ElInputNumber,
   ElOption,
+  ElRow,
   ElSelect,
   ElSkeleton,
   ElTag,
@@ -119,8 +120,8 @@ const routeToDishDetails = (id) => {
   router.push({
     name: "dishes-detail",
     params: {
-      id
-    }
+      id,
+    },
   });
 };
 
@@ -270,11 +271,7 @@ onMounted(async () => {
     </template>
     <template v-else>
       <div class="cards-container">
-        <ElCard
-          v-for="item in dishes"
-          :key="item.id"
-          @click="routeToDishDetails(item.id)"
-        >
+        <ElCard v-for="item in dishes" :key="item.id">
           <template #header>
             <div class="card-header">
               <span class="card-name">{{ item.name }}</span>
@@ -303,13 +300,19 @@ onMounted(async () => {
                   <ElTag>{{ item.price }} {{ item.currency }}</ElTag>
                 </ElDescriptionsItem>
               </ElDescriptions>
-
-              <ElButton class="add-to-cart">
+              
+              <ElButton class="add-to-cart" v-if="!isChef">
                 <ElIcon>
                   <Plus />
                 </ElIcon>
               </ElButton>
             </div>
+
+            <ElRow>
+              <ElButton @click="routeToDishDetails(item.id)">
+                Подробнее
+              </ElButton>
+            </ElRow>
           </template>
         </ElCard>
       </div>

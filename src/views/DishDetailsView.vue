@@ -8,7 +8,7 @@ const route = useRoute();
 const dish = ref({});
 const dishApi = useDishStore();
 const dishId = ref(route?.params?.id);
-
+  
 const load = async () => {
   try {
     const { data } = await dishApi.getDishById(dishId.value);

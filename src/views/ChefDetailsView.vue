@@ -192,6 +192,35 @@ onMounted(async () => {
         </div>
       </ElCard>
 
+      <div class="dishes-section" v-if="chef.dishes && chef.dishes.length">
+        <h3>Блюда шефа</h3>
+        <div class="dishes-scroll">
+          <ElCard
+            v-for="dish in chef.dishes"
+            :key="dish.id"
+            class="dish-card"
+            shadow="hover"
+          >
+            <!-- содержимое карточки (оставляем как было) -->
+            <div class="dish-card-header">
+              <span class="dish-name">{{ dish.name }}</span>
+              <el-tag size="small" type="info">{{ dish.category }}</el-tag>
+            </div>
+            <p class="dish-description">{{ dish.description }}</p>
+            <div class="dish-meta">
+              <span class="dish-price">{{ dish.price }} ₽</span>
+              <span class="dish-cook-time">{{ dish.cookTime }} мин</span>
+            </div>
+            <div class="dish-footer">
+              <span class="dish-kitchen">{{ dish.kitchen }}</span>
+              <span class="dish-date">{{
+                new Date(dish.createdDate).toLocaleDateString()
+              }}</span>
+            </div>
+          </ElCard>
+        </div>
+      </div>
+
       <!-- Форма отзыва (будет позже) -->
       <div class="coming-soon">
         <ElCard>
@@ -205,4 +234,93 @@ onMounted(async () => {
 
 <style scoped>
 @import "@/assets/styles/components/profiles.css";
+
+.dishes-section {
+  margin-top: 30px;
+}
+.dishes-section h3 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #303133;
+}
+.dish-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 280px;
+  margin: 0;
+}
+.dish-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.dish-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.dish-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+.dish-description {
+  color: #606266;
+  font-size: 0.9rem;
+  margin: 10px 0;
+  line-height: 1.5;
+  min-height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.dish-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.dish-price {
+  font-weight: 700;
+  color: #f56c6c;
+}
+.dish-cook-time {
+  color: #909399;
+}
+.dish-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #909399;
+  border-top: 1px solid #ebeef5;
+  padding-top: 8px;
+}
+
+.dishes-scroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+}
+
+.dishes-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.dishes-scroll::-webkit-scrollbar-thumb {
+  background-color: #c0c4cc;
+  border-radius: 3px;
+}
+
+
+
+@media (max-width: 768px) {
+  .dish-card {
+    width: 220px;
+  }
+}
 </style>
