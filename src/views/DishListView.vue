@@ -22,17 +22,26 @@ import { useNotification } from "@/composables/useNotification";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
 import { useDishStore } from "@/store/dish";
+import { useCartStore } from "@/store/cart";
 
-const dishes = ref([]);
+// API
 const dishApi = useDishStore();
 const authApi = useAuthStore();
+const cartApi = useCartStore();
+
+// ROUTER
 const router = useRouter();
-const isChef = authApi.isChef;
-const isLoading = ref(false);
+
+// DATA
+const dishes = ref([]);
 const filters = reactive({});
 const kitchens = ref([]);
 const ingredients = ref([]);
 const categories = ref([]);
+const sort = ref();
+const isChef = authApi.isChef;
+const userId = authApi?.user.id;
+const isLoading = ref(false);
 
 const sortItems = ref([
   {
@@ -46,7 +55,6 @@ const sortItems = ref([
     value: "desc",
   },
 ]);
-const sort = ref();
 
 const load = async () => {
   try {
@@ -123,6 +131,23 @@ const routeToDishDetails = (id) => {
       id,
     },
   });
+};
+
+const addToCart = async (dishId) => {
+  try {
+    const cartData = {
+      dishId,
+      userId,
+      amount: 1,
+    };
+
+    await cartApi.addItemToCart(cartData);
+    useNotification("Успех", "Товар в корзине", "success");
+  } catch (error) {
+    useNotification("Неудачно", "Товар не добавился в корзину", "error");
+  } finally {
+    cartData = null;
+  }
 };
 
 onMounted(async () => {
@@ -300,8 +325,12 @@ onMounted(async () => {
                   <ElTag>{{ item.price }} {{ item.currency }}</ElTag>
                 </ElDescriptionsItem>
               </ElDescriptions>
-              
-              <ElButton class="add-to-cart" v-if="!isChef">
+
+              <ElButton
+                @click="addToCart(item.id)"
+                class="add-to-cart"
+                v-if="!isChef"
+              >
                 <ElIcon>
                   <Plus />
                 </ElIcon>

@@ -126,20 +126,20 @@ onMounted(() => {
       <div class="header-right">
         <div class="header-icons">
           <!-- TODO: добавить счётчик -->
-          <router-link to="/favorites" class="icon-link">
+          <RouterLink to="/favorites" class="icon-link">
             <ElBadge class="badge">
               <ElIcon :size="20"><Star /></ElIcon>
             </ElBadge>
             <span class="icon-label">Избранное</span>
-          </router-link>
+          </RouterLink>
 
           <!-- TODO: добавить счётчик -->
-          <router-link to="/cart" class="icon-link">
+          <RouterLink to="/cart" class="icon-link">
             <ElBadge :max="99" class="badge">
               <ElIcon :size="20"><ShoppingCart /></ElIcon>
             </ElBadge>
             <span class="icon-label">Корзина</span>
-          </router-link>
+          </RouterLink>
         </div>
 
         <ElDropdown class="header-dropdown">
