@@ -17,10 +17,13 @@ import {
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
 import { computed, ref, onMounted } from "vue";
+import { useCartStore } from "@/store/cart";
 
 const router = useRouter();
 const isAuthenticated = computed(() => authApi.isAuthenticated);
 const authApi = useAuthStore();
+const cartApi = useCartStore();
+const amountCartItems = computed(() => cartApi.amount);
 const userData = computed(() => authApi.user);
 
 const routeToProfile = () => {
@@ -135,7 +138,7 @@ onMounted(() => {
 
           <!-- TODO: добавить счётчик -->
           <RouterLink to="/cart" class="icon-link">
-            <ElBadge :max="99" class="badge">
+            <ElBadge :value="amountCartItems" :max="99" class="badge">
               <ElIcon :size="20"><ShoppingCart /></ElIcon>
             </ElBadge>
             <span class="icon-label">Корзина</span>

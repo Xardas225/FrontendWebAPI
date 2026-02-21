@@ -142,11 +142,10 @@ const addToCart = async (dishId) => {
     };
 
     await cartApi.addItemToCart(cartData);
+    await cartApi.getCountCartItemsByUserId(userId);
     useNotification("Успех", "Товар в корзине", "success");
   } catch (error) {
     useNotification("Неудачно", "Товар не добавился в корзину", "error");
-  } finally {
-    cartData = null;
   }
 };
 
