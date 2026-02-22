@@ -17,14 +17,10 @@ const cartApi = useCartStore();
 const cartItems = ref([]);
 const cartSum = ref(0);
 const cartItemsAmount = ref(0);
-// Временные данные для количества
-const quantities = ref([1, 1, 1]);
 
 const load = async () => {
   try {
     const data = await cartApi.getItemsFromCart();
-
-    console.log(data);
 
     cartItems.value = data;
 
@@ -33,6 +29,20 @@ const load = async () => {
     cartItemsAmount.value = data.length;
   } catch (error) {
     useNotification("Неудачно", "Данные по корзине не загрузились", "error");
+  }
+};
+
+const removeItem = async (itemId) => {
+  try {
+    await cartApi.deleteItemFromCart(itemId);
+    await cartApi.getCountCartItemsByUserId();
+    await load();
+  } catch (error) {
+    useNotification(
+      "Неудачно",
+      "Не вышло удалить. Попробуйте ещё раз",
+      "error",
+    );
   }
 };
 
@@ -45,7 +55,7 @@ onMounted(async () => {
   <div class="cart-page">
     <h1 class="cart-title">Корзина</h1>
 
-    <ElRow :gutter="20">
+    <ElRow v-if="cartItemsAmount" :gutter="20">
       <ElCol :xs="24" :lg="16">
         <ElCard shadow="never" class="cart-items-card">
           <div v-for="item in cartItems" :key="item.id" class="cart-item">
@@ -78,7 +88,13 @@ onMounted(async () => {
               </ElCol>
 
               <ElCol :span="2" class="item-remove-col">
-                <ElButton :icon="Delete" text size="small" class="remove-btn" />
+                <ElButton
+                  @click="removeItem(item.id)"
+                  :icon="Delete"
+                  text
+                  size="small"
+                  class="remove-btn"
+                />
               </ElCol>
             </ElRow>
           </div>
@@ -112,6 +128,11 @@ onMounted(async () => {
         </ElCard>
       </ElCol>
     </ElRow>
+
+    <div v-else>
+      Корзина пуста
+    </div>
+
   </div>
 </template>
 

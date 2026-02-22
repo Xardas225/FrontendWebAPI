@@ -15,9 +15,9 @@ export const useCartStore = defineStore(
       }
     };
 
-    const getCountCartItemsByUserId = async (userId) => {
+    const getCountCartItemsByUserId = async () => {
       try {
-        const { data } = await api.get(`/cart/count/${userId}`);
+        const { data } = await api.get(`/cart/count`);
 
         amount.value = data;
       } catch (error) {
@@ -29,9 +29,21 @@ export const useCartStore = defineStore(
       try {
         const { data } = await api.get("/cart");
 
-        console.log(data);
-
         return data;
+      } catch (error) {
+        throw { message: error.message, code: error?.code };
+      }
+    };
+
+    const deleteItemFromCart = async (itemId) => {
+      try {
+        await api.delete(`/cart/${itemId}`);
+
+        amount.value -= 1;
+
+        return {
+          success: true
+        }
       } catch (error) {
         throw { message: error.message, code: error?.code };
       }
@@ -41,6 +53,7 @@ export const useCartStore = defineStore(
       addItemToCart,
       getCountCartItemsByUserId,
       getItemsFromCart,
+      deleteItemFromCart,
       amount,
     };
   },
