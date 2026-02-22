@@ -19,10 +19,19 @@ export const useCartStore = defineStore(
       try {
         const { data } = await api.get(`/cart/count/${userId}`);
 
-        console.log(data);
-        
-
         amount.value = data;
+      } catch (error) {
+        throw { message: error.message, code: error?.code };
+      }
+    };
+
+    const getItemsFromCart = async () => {
+      try {
+        const { data } = await api.get("/cart");
+
+        console.log(data);
+
+        return data;
       } catch (error) {
         throw { message: error.message, code: error?.code };
       }
@@ -31,7 +40,8 @@ export const useCartStore = defineStore(
     return {
       addItemToCart,
       getCountCartItemsByUserId,
-      amount
+      getItemsFromCart,
+      amount,
     };
   },
 

@@ -8,10 +8,37 @@ import {
   ElInputNumber,
   ElRow,
 } from "element-plus";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useNotification } from "@/composables/useNotification";
+import { useCartStore } from "@/store/cart";
 
+const cartApi = useCartStore();
+
+const cartItems = ref([]);
+const cartSum = ref(0);
+const cartItemsAmount = ref(0);
 // Временные данные для количества
 const quantities = ref([1, 1, 1]);
+
+const load = async () => {
+  try {
+    const data = await cartApi.getItemsFromCart();
+
+    console.log(data);
+
+    cartItems.value = data;
+
+    cartSum.value = data.reduce((acc, item) => acc + item.dishPrice, 0);
+
+    cartItemsAmount.value = data.length;
+  } catch (error) {
+    useNotification("Неудачно", "Данные по корзине не загрузились", "error");
+  }
+};
+
+onMounted(async () => {
+  await load();
+});
 </script>
 
 <template>
@@ -19,12 +46,10 @@ const quantities = ref([1, 1, 1]);
     <h1 class="cart-title">Корзина</h1>
 
     <ElRow :gutter="20">
-      <!-- Левая колонка – список товаров -->
       <ElCol :xs="24" :lg="16">
         <ElCard shadow="never" class="cart-items-card">
-          <div v-for="item in 3" :key="item" class="cart-item">
+          <div v-for="item in cartItems" :key="item.id" class="cart-item">
             <ElRow :gutter="16" align="middle">
-              <!-- Изображение -->
               <ElCol :span="4" class="item-image-col">
                 <ElImage
                   src="https://via.placeholder.com/100x100"
@@ -33,29 +58,25 @@ const quantities = ref([1, 1, 1]);
                 />
               </ElCol>
 
-              <!-- Информация о товаре -->
               <ElCol :span="8" class="item-info">
-                <div class="item-name">Супер блюдо</div>
-                <div class="item-desc">Краткое описание блюда</div>
-                <div class="item-price">1 000 ₽</div>
+                <div class="item-name">{{ item.dishName }}</div>
+                <div class="item-desc">{{ item.dishDescription }}</div>
+                <div class="item-price">{{ item.dishPrice }}</div>
               </ElCol>
 
-              <!-- Блок количества -->
               <ElCol :span="6" class="item-quantity-col">
                 <ElInputNumber
-                  v-model="quantities[item]"
+                  v-model="item.dishAmount"
                   :min="1"
                   size="small"
                   controls-position="right"
                 />
               </ElCol>
 
-              <!-- Итоговая цена за позицию -->
               <ElCol :span="4" class="item-total-col">
-                <span class="item-total">1 000 ₽</span>
+                <span class="item-total">{{ item.dishPrice }}</span>
               </ElCol>
 
-              <!-- Кнопка удаления -->
               <ElCol :span="2" class="item-remove-col">
                 <ElButton :icon="Delete" text size="small" class="remove-btn" />
               </ElCol>
@@ -64,7 +85,6 @@ const quantities = ref([1, 1, 1]);
         </ElCard>
       </ElCol>
 
-      <!-- Правая колонка – итоги -->
       <ElCol :xs="24" :lg="8">
         <ElCard shadow="never" class="summary-card">
           <template #header>
@@ -72,8 +92,8 @@ const quantities = ref([1, 1, 1]);
           </template>
 
           <div class="summary-row">
-            <span>Товары (3)</span>
-            <span>3 000 ₽</span>
+            <span>Товары ({{ cartItemsAmount }})</span>
+            <span>{{ cartSum }}</span>
           </div>
           <div class="summary-row">
             <span>Доставка</span>
@@ -83,7 +103,7 @@ const quantities = ref([1, 1, 1]);
 
           <div class="summary-total">
             <span>Итого</span>
-            <span class="total-price">3 000 ₽</span>
+            <span class="total-price">{{ cartSum }}</span>
           </div>
 
           <ElButton type="primary" size="large" class="checkout-btn" block>
@@ -100,7 +120,8 @@ const quantities = ref([1, 1, 1]);
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px 16px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .cart-title {
