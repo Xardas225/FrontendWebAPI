@@ -149,6 +149,15 @@ const addToCart = async (dishId) => {
   }
 };
 
+const routeToChef = (chefId) => {
+  router.push({
+    name: "chef-detail",
+    params: {
+      id: chefId,
+    },
+  });
+};
+
 onMounted(async () => {
   await load();
 });
@@ -315,6 +324,13 @@ onMounted(async () => {
                 <ElTag>{{ item.category }}</ElTag>
               </ElDescriptionsItem>
             </ElDescriptions>
+
+            <ElRow>
+              <div @click="routeToChef(item.authorId)" class="card-author">
+                <ElIcon><User /></ElIcon>
+                <span>{{ item.authorName }}</span>
+              </div>
+            </ElRow>
           </div>
 
           <template #footer>
@@ -359,5 +375,36 @@ onMounted(async () => {
 
 .sort-select {
   width: 200px;
+}
+
+.card-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #2c3e50;
+  font-size: 14px;
+  transition:
+    color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.card-author:hover {
+  color: #409eff;
+  transform: translateY(-1px);
+}
+
+.card-author:active {
+  transform: translateY(0);
+}
+
+.card-author .el-icon {
+  font-size: 16px;
+  color: #909399;
+  transition: color 0.2s ease;
+}
+
+.card-author:hover .el-icon {
+  color: #409eff;
 }
 </style>

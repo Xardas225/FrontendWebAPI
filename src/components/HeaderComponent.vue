@@ -97,7 +97,7 @@ onMounted(() => {
 
           <ElMenuItem index="3">
             <RouterLink to="/chefs" class="router-link">
-              <ElText class="mx-1" type="primary" size="large"> Повара </ElText>
+              <ElText class="mx-1" type="primary" size="large"> Шефы </ElText>
             </RouterLink>
           </ElMenuItem>
         </ElMenu>

@@ -119,6 +119,15 @@ const routes = [
       title: "Корзина",
     },
   },
+  {
+    path: "/order-checkout",
+    name: "order-checkout",
+    component: () => import("@/views/OrderCheckout.vue"),
+    meta: {
+      requiresAuth: true,
+      title: "Оформление заказа",
+    },
+  },
 ];
 
 export default routes;

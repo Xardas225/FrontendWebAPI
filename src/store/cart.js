@@ -5,7 +5,9 @@ import { ref } from "vue";
 export const useCartStore = defineStore(
   "cart",
   () => {
+    const items = ref([]);
     const amount = ref(0);
+    const sum = ref(0);
 
     const addItemToCart = async (data) => {
       try {
@@ -29,7 +31,10 @@ export const useCartStore = defineStore(
       try {
         const { data } = await api.get("/cart");
 
-        return data;
+        items.value = data;
+        amount.value = data.length; 
+
+        sum.value = data.reduce((acc, item) => acc + item.dishPrice, 0);
       } catch (error) {
         throw { message: error.message, code: error?.code };
       }
@@ -48,13 +53,15 @@ export const useCartStore = defineStore(
         throw { message: error.message, code: error?.code };
       }
     };
-
+    
     return {
       addItemToCart,
       getCountCartItemsByUserId,
       getItemsFromCart,
       deleteItemFromCart,
       amount,
+      items, 
+      sum
     };
   },
 

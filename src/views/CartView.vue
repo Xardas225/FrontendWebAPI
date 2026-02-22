@@ -8,25 +8,21 @@ import {
   ElInputNumber,
   ElRow,
 } from "element-plus";
-import { onMounted, ref } from "vue";
+import { onMounted, computed } from "vue";
 import { useNotification } from "@/composables/useNotification";
 import { useCartStore } from "@/store/cart";
+import { useRouter } from "vue-router";
 
 const cartApi = useCartStore();
-
-const cartItems = ref([]);
-const cartSum = ref(0);
-const cartItemsAmount = ref(0);
+const router = useRouter();
+const cartItems = computed(() => cartApi.items);
+const cartItemsAmount = computed(() => cartApi.amount);
+const cartSum = computed(() => cartApi.sum);
 
 const load = async () => {
   try {
-    const data = await cartApi.getItemsFromCart();
+    await cartApi.getItemsFromCart();
 
-    cartItems.value = data;
-
-    cartSum.value = data.reduce((acc, item) => acc + item.dishPrice, 0);
-
-    cartItemsAmount.value = data.length;
   } catch (error) {
     useNotification("Неудачно", "Данные по корзине не загрузились", "error");
   }
@@ -35,7 +31,6 @@ const load = async () => {
 const removeItem = async (itemId) => {
   try {
     await cartApi.deleteItemFromCart(itemId);
-    await cartApi.getCountCartItemsByUserId();
     await load();
   } catch (error) {
     useNotification(
@@ -44,6 +39,12 @@ const removeItem = async (itemId) => {
       "error",
     );
   }
+};
+
+const routeToOrderCheckout = () => {
+  router.push({
+    name: "order-checkout",
+  });
 };
 
 onMounted(async () => {
@@ -122,17 +123,20 @@ onMounted(async () => {
             <span class="total-price">{{ cartSum }}</span>
           </div>
 
-          <ElButton type="primary" size="large" class="checkout-btn" block>
+          <ElButton
+            @click="routeToOrderCheckout"
+            type="primary"
+            size="large"
+            class="checkout-btn"
+            block
+          >
             Перейти к оформлению
           </ElButton>
         </ElCard>
       </ElCol>
     </ElRow>
 
-    <div v-else>
-      Корзина пуста
-    </div>
-
+    <div v-else>Корзина пуста</div>
   </div>
 </template>
 
