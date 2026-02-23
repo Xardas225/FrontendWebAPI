@@ -137,6 +137,15 @@ const routes = [
       title: "Мои заказы",
     },
   },
+  {
+    path: "/orders/:id",
+    name: "order-details",
+    component: () => import("@/views/OrderDetailsView.vue"),
+    meta: {
+      requiresAuth: true,
+      title: "Просмотр заказа",
+    },
+  },
 ];
 
 export default routes;

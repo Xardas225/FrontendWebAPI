@@ -15,13 +15,19 @@ import {
 import { computed, onMounted, ref } from "vue";
 import { useOrderStore } from "@/store/order";
 import { useNotification } from "@/composables/useNotification";
+import { useRouter } from "vue-router";
 
 const orderApi = useOrderStore();
-
+const router = useRouter();
 const orders = computed(() => orderApi.orders);
 
 const routeToOrder = (id) => {
-  console.log("Просмотр заказа", id);
+  router.push({
+    name: "order-details",
+    params: {
+      id,
+    },
+  });
 };
 
 const load = async () => {
