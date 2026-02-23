@@ -16,10 +16,13 @@ import { useCartStore } from "@/store/cart";
 import { useOrderStore } from "@/store/order";
 import { computed, reactive } from "vue";
 import { useNotification } from "@/composables/useNotification";
+import { useRouter } from "vue-router";
 
 const cartApi = useCartStore();
 const authApi = useAuthStore();
 const orderApi = useOrderStore();
+
+const router = useRouter();
 
 const cartItems = computed(() => cartApi.items);
 const cartItemsAmount = computed(() => cartApi.amount);
@@ -45,6 +48,11 @@ const form = reactive({
 const createOrder = async () => {
   try {
     await orderApi.createOrder({ ...form });
+    await cartApi.getItemsFromCart();
+    router.push({
+      name: "home",
+    });
+     useNotification("Успех", "Заказ успешно создан", "success");
   } catch (error) {
     useNotification("Неудачно", "Не создали заказ.", "error");
   }
@@ -110,9 +118,7 @@ const createOrder = async () => {
             <span class="card-header">Способ оплаты</span>
           </template>
           <ElRadioGroup v-model="form.paymentMethod" class="payment-options">
-            <ElRadio :value="0"
-              >Онлайн картой (Visa, Mastercard, МИР)</ElRadio
-            >
+            <ElRadio :value="0">Онлайн картой (Visa, Mastercard, МИР)</ElRadio>
             <ElRadio :value="1">Наличными курьеру</ElRadio>
           </ElRadioGroup>
         </ElCard>

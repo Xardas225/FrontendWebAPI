@@ -5,6 +5,9 @@ import { ref } from "vue";
 export const useOrderStore = defineStore(
   "order",
   () => {
+
+    const orders = ref([]);
+
     const createOrder = async (request) => {
       try {
         await api.post("/orders", request);
@@ -13,8 +16,20 @@ export const useOrderStore = defineStore(
       }
     };
 
+    const getAllOrders = async () => {
+      try {
+        const {data} = await api.get("/orders");
+
+        orders.value = data
+      } catch (error) {
+        throw { message: error.message, code: error?.code };
+      }
+    };
+
     return {
       createOrder,
+      getAllOrders,
+      orders
     };
   },
   {

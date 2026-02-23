@@ -47,6 +47,12 @@ const routeToProfile = () => {
   }
 };
 
+const routeToOrders = () => {
+  router.push({
+    name: "orders"
+  })
+}
+
 const logout = async () => {
   try {
     const result = await authApi.logout();
@@ -153,6 +159,11 @@ onMounted(() => {
               <ElDropdownItem @click="routeToProfile">
                 <ElText class="mx-1" type="primary" size="large">
                   Профиль
+                </ElText>
+              </ElDropdownItem>
+              <ElDropdownItem @click="routeToOrders">
+                <ElText class="mx-1" type="primary" size="large">
+                  Заказы
                 </ElText>
               </ElDropdownItem>
               <ElDropdownItem>
