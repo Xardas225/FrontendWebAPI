@@ -1,0 +1,33 @@
+networks:
+  shared:
+    external: true
+    name: homechef-shared
+
+services:
+  notification-service:
+    build: ./services/notification-service
+    container_name: notification-service
+    environment:
+      - NODE_ENV=development
+      - KAFKA_BROKERS=homechef-kafka:29092
+      - KAFKA_TOPIC=order-created
+      - REDIS_HOST=homechef-redis
+      - REDIS_PORT=6379
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_SECURE=false
+    volumes:  
+      - ./services/notification-service:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - shared
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025" 
+    networks:
+      - shared
