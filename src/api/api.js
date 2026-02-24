@@ -1,5 +1,8 @@
 import axios from 'axios'
 import router from '@/router';
+import { useAuthStore } from '@/store/auth';
+
+
 
 
 const api = axios.create({
@@ -33,6 +36,10 @@ api.interceptors.response.use(
     return response
   },
   async (error) => {
+
+    const authApi = useAuthStore();
+
+    await authApi.logout();
 
     if (error.response.status === 401) {
       router.push({
