@@ -28,7 +28,7 @@ const routes = [
   {
     path: "/users",
     name: "users",
-    component: () => import("@/views/UserListView.vue"),
+    component: () => import("@/views/user/UserListView.vue"),
     meta: {
       requiresAuth: true,
       title: "Пользователи",
@@ -37,7 +37,7 @@ const routes = [
   {
     path: "/users/:id",
     name: "user-detail",
-    component: () => import("@/views/UserDetailsView.vue"),
+    component: () => import("@/views/user/UserDetailsView.vue"),
     meta: {
       requiresAuth: true,
       title: "Пользователь",
@@ -47,7 +47,7 @@ const routes = [
   {
     path: "/users/edit/:id",
     name: "user-edit",
-    component: () => import("@/views/UserEditView.vue"),
+    component: () => import("@/views/user/UserEditView.vue"),
     meta: {
       requiresAuth: true,
       title: "Пользователь",
@@ -57,7 +57,7 @@ const routes = [
   {
     path: "/dishes",
     name: "dishes",
-    component: () => import("@/views/DishListView.vue"),
+    component: () => import("@/views/dish/DishListView.vue"),
     meta: {
       requiresAuth: true,
       title: "Блюда",
@@ -66,7 +66,7 @@ const routes = [
   {
     path: "/dishes/create",
     name: "dishes-create",
-    component: () => import("@/views/DishCreateView.vue"),
+    component: () => import("@/views/dish/DishCreateView.vue"),
     meta: {
       requiresAuth: true,
       title: "Создание блюда",
@@ -75,7 +75,7 @@ const routes = [
   {
     path: "/dishes/:id",
     name: "dishes-detail",
-    component: () => import("@/views/DishDetailsView.vue"),
+    component: () => import("@/views/dish/DishDetailsView.vue"),
     meta: {
       requiresAuth: true,
       title: "Просмотр блюда",
@@ -84,7 +84,7 @@ const routes = [
   {
     path: "/chefs",
     name: "chefs",
-    component: () => import("@/views/ChefListView.vue"),
+    component: () => import("@/views/chef/ChefListView.vue"),
     meta: {
       requiresAuth: true,
       title: "Шефы",
@@ -93,7 +93,7 @@ const routes = [
   {
     path: "/chefs/:id",
     name: "chef-detail",
-    component: () => import("@/views/ChefDetailsView.vue"),
+    component: () => import("@/views/chef/ChefDetailsView.vue"),
     meta: {
       requiresAuth: true,
       title: "Шеф",
@@ -103,7 +103,7 @@ const routes = [
   {
     path: "/chefs/edit/:id",
     name: "chef-edit",
-    component: () => import("@/views/ChefEditView.vue"),
+    component: () => import("@/views/chef/ChefEditView.vue"),
     meta: {
       requiresAuth: true,
       title: "Шеф",
@@ -122,7 +122,7 @@ const routes = [
   {
     path: "/order-checkout",
     name: "order-checkout",
-    component: () => import("@/views/OrderCheckoutView.vue"),
+    component: () => import("@/views/order/OrderCheckoutView.vue"),
     meta: {
       requiresAuth: true,
       title: "Оформление заказа",
@@ -131,7 +131,7 @@ const routes = [
   {
     path: "/orders",
     name: "orders",
-    component: () => import("@/views/OrderListView.vue"),
+    component: () => import("@/views/order/OrderListView.vue"),
     meta: {
       requiresAuth: true,
       title: "Мои заказы",
@@ -140,7 +140,7 @@ const routes = [
   {
     path: "/orders/:id",
     name: "order-details",
-    component: () => import("@/views/OrderDetailsView.vue"),
+    component: () => import("@/views/order/OrderDetailsView.vue"),
     meta: {
       requiresAuth: true,
       title: "Просмотр заказа",

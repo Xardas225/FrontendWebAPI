@@ -39,9 +39,8 @@ api.interceptors.response.use(
 
     const authApi = useAuthStore();
 
-    await authApi.logout();
-
     if (error.response.status === 401) {
+      await authApi.logout();
       router.push({
         name: "login"
       })
