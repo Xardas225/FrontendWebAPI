@@ -9,6 +9,7 @@ import {
   ElDropdownMenu,
   ElHeader,
   ElIcon,
+  ElInput,
   ElMenu,
   ElMenuItem,
   ElRow,
@@ -25,6 +26,7 @@ const authApi = useAuthStore();
 const cartApi = useCartStore();
 const amountCartItems = computed(() => cartApi.amount);
 const userData = computed(() => authApi.user);
+const searchQuery = ref("");
 
 const routeToProfile = () => {
   const role = userData.value.role;
@@ -49,9 +51,9 @@ const routeToProfile = () => {
 
 const routeToOrders = () => {
   router.push({
-    name: "orders"
-  })
-}
+    name: "orders",
+  });
+};
 
 const logout = async () => {
   try {
@@ -85,6 +87,12 @@ onMounted(() => {
     <template v-if="isAuthenticated">
       <div class="header-center">
         <ElMenu mode="horizontal" :ellipsis="false">
+          <ElInput v-model="searchQuery" placeholder="Поиск..." clearable>
+            <template #prefix>
+              <ElIcon><Search /></ElIcon>
+            </template>
+          </ElInput>
+
           <ElMenuItem index="1">
             <RouterLink to="/users" class="router-link">
               <ElText class="mx-1" type="primary" size="large">
