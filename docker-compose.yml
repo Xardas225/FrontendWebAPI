@@ -23,6 +23,17 @@ services:
     networks:
       - shared
 
+  semantic-search:
+    build: ./services/semantic-search
+    container_name: semantic-search
+    ports:
+      - "3000:3000" 
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    networks:
+      - shared
+
   mailhog:
     image: mailhog/mailhog:latest
     container_name: mailhog
