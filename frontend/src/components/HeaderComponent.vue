@@ -19,6 +19,7 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
 import { computed, ref, onMounted } from "vue";
 import { useCartStore } from "@/store/cart";
+import { useSearchStore } from "@/store/search";
 
 const router = useRouter();
 const isAuthenticated = computed(() => authApi.isAuthenticated);
@@ -27,6 +28,8 @@ const cartApi = useCartStore();
 const amountCartItems = computed(() => cartApi.amount);
 const userData = computed(() => authApi.user);
 const searchQuery = ref("");
+const seacrhApi = useSearchStore();
+
 
 const routeToProfile = () => {
   const role = userData.value.role;
@@ -69,6 +72,11 @@ const logout = async () => {
   }
 };
 
+
+const handleSearch = async () => {
+  await seacrhApi.search({query: searchQuery.value});
+}
+
 onMounted(() => {
   authApi.initialize();
 });
@@ -87,9 +95,17 @@ onMounted(() => {
     <template v-if="isAuthenticated">
       <div class="header-center">
         <ElMenu mode="horizontal" :ellipsis="false">
-          <ElInput v-model="searchQuery" placeholder="Поиск..." clearable>
+          <ElInput
+            v-model="searchQuery"
+            placeholder="Поиск..."
+            clearable
+            @keyup.enter="handleSearch"
+          >
             <template #prefix>
               <ElIcon><Search /></ElIcon>
+            </template>
+            <template #append>
+              <ElButton @click="handleSearch">Найти</ElButton>
             </template>
           </ElInput>
 
