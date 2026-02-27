@@ -1,47 +1,42 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useLoop } from "@tresjs/core";
-import { useTexture, useGLTF } from "@tresjs/cientos";
+import OnionComponent from "./OnionComponent.vue";
+import { shallowRef, ref, watch, markRaw } from "vue";
+import { useGLTF } from "@tresjs/cientos";
 const { state } = useGLTF("/models/onion/yellow_onion_4k.gltf");
-const { onBeforeRender } = useLoop();
-const onion = ref();
+const onions = shallowRef([]);
 
-onBeforeRender(({ delta, elapsed }) => {
-  if (onion.value) {
-    onion.value.rotation.y += delta * 2;
-  }
+const props = defineProps({
+  count: { type: Number, default: 0 },
+  position: { type: Array, default: [0, 3.055, 0] },
 });
 
-const { state: texture } = useTexture(
-  "/models/onion/textures/yellow_onion_diff_4k.jpg",
+watch(
+  () => props.count,
+  (val) => {
+    onions.value = [];
+    for (let i = 1; i <= val; i++) {
+      const scene = state.value.scene.clone();
+      const item = {
+        scene: markRaw(scene),
+        position: props.position.map((elem, index) =>
+          index == 0 ? i * 0.2 : elem,
+        ),
+        scale: 3,
+      };
+      onions.value.push(item);
+    }
+  },
 );
-
-const clones = ref([]);
-
-// const positions = [
-//   [0, 3.1, 0],
-//   [0.5, 3.1, 0.2],
-//   [-0.3, 3.1, -0.1],
-// ];
-
-watch(state, (newVal) => {
-  if (newVal?.scene) {
-    // console.log("====================================");
-    // console.log(`STATE`, newVal?.scene);
-    // console.log("====================================");
-    // clones.value = positions.map(() => newVal.scene.clone());
-  }
-});
 </script>
 
-<template lang="">
-  <primitive
-    v-if="state"
-    ref="onion"
-    :position="[0, 3.055, 0]"
-    :object="state.scene"
-    :scale="3"
+<template>
+  <OnionComponent
+    v-for="(item, index) in onions"
+    :key="index"
+    :scene="item.scene"
+    :position="item.position"
+    :scale="item.scale"
   />
 </template>
 
-<style lang=""></style>
+<style></style>

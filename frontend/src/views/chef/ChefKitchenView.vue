@@ -1,15 +1,22 @@
 <script setup>
 import { TresCanvas } from "@tresjs/core";
 import { OrbitControls } from "@tresjs/cientos";
+import { ElInput } from "element-plus";
 import * as Tres from "@tresjs/core";
 console.log(Object.keys(Tres));
 import OnionManager from "@/components/models/OnionManager.vue";
+import { ref } from "vue";
+
+const onionCount = ref(1);
 
 </script>
 
 <template>
   <div class="container">
-    <TresCanvas clear-color="#82DBC5">
+    <label>Количество луков:</label>
+    <ElInput type="number" v-model="onionCount" />
+
+    <TresCanvas   clear-color="#82DBC5">
       <!-- Камера -->
       <TresPerspectiveCamera :position="[6, 6, 5]" :look-at="[1, 2, 0]" />
       <OrbitControls />
@@ -34,8 +41,7 @@ import OnionManager from "@/components/models/OnionManager.vue";
           <TresMeshStandardMaterial />
         </TresMesh>
 
-        <OnionManager />
-
+        <OnionManager :count="onionCount"/>
       </TresGroup>
 
       <!-- Пол -->
@@ -54,5 +60,6 @@ import OnionManager from "@/components/models/OnionManager.vue";
   margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
+  z-index: 9999999;
 }
 </style>
