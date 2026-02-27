@@ -3,6 +3,7 @@ import {
   ElAvatar,
   ElBadge,
   ElButton,
+  ElCard,
   ElCol,
   ElDropdown,
   ElDropdownItem,
@@ -15,11 +16,11 @@ import {
   ElRow,
   ElText,
 } from "element-plus";
+import SearchComponent from "./SearchComponent.vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
-import { computed, ref, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useCartStore } from "@/store/cart";
-import { useSearchStore } from "@/store/search";
 
 const router = useRouter();
 const isAuthenticated = computed(() => authApi.isAuthenticated);
@@ -27,8 +28,6 @@ const authApi = useAuthStore();
 const cartApi = useCartStore();
 const amountCartItems = computed(() => cartApi.amount);
 const userData = computed(() => authApi.user);
-const searchQuery = ref("");
-const seacrhApi = useSearchStore();
 
 
 const routeToProfile = () => {
@@ -73,9 +72,6 @@ const logout = async () => {
 };
 
 
-const handleSearch = async () => {
-  await seacrhApi.search({query: searchQuery.value});
-}
 
 onMounted(() => {
   authApi.initialize();
@@ -95,19 +91,8 @@ onMounted(() => {
     <template v-if="isAuthenticated">
       <div class="header-center">
         <ElMenu mode="horizontal" :ellipsis="false">
-          <ElInput
-            v-model="searchQuery"
-            placeholder="Поиск..."
-            clearable
-            @keyup.enter="handleSearch"
-          >
-            <template #prefix>
-              <ElIcon><Search /></ElIcon>
-            </template>
-            <template #append>
-              <ElButton @click="handleSearch">Найти</ElButton>
-            </template>
-          </ElInput>
+          
+          <SearchComponent />
 
           <ElMenuItem index="1">
             <RouterLink to="/users" class="router-link">
@@ -305,4 +290,6 @@ onMounted(() => {
   margin-top: 4px;
   white-space: nowrap;
 }
+
+
 </style>

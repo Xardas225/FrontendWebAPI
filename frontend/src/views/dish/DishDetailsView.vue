@@ -1,14 +1,14 @@
 <script setup>
 import { ElCard, ElDescriptions, ElDescriptionsItem } from "element-plus";
-import { onMounted,  ref } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useDishStore } from "@/store/dish";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 const dish = ref({});
 const dishApi = useDishStore();
-const dishId = ref(route?.params?.id);
-  
+const dishId = computed(() => route?.params?.id);
+
 const load = async () => {
   try {
     const { data } = await dishApi.getDishById(dishId.value);
@@ -16,6 +16,11 @@ const load = async () => {
     dish.value = data;
   } catch (error) {}
 };
+
+watch(
+  () => dishId.value,
+  async () => await load(),
+);
 
 onMounted(async () => {
   await load();
