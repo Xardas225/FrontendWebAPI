@@ -64,6 +64,12 @@ const routeToEditKitchen = () => {
   });
 };
 
+const routeToChat = () => {
+  router.push({
+    name: "chat",
+  });
+};
+
 onMounted(async () => {
   await load();
 });
@@ -116,12 +122,8 @@ onMounted(async () => {
           </div>
 
           <div class="profile-actions">
-            <ElButton
-              v-if="!chef.isActive"
-              type="primary"
-              @click="activateChef"
-            >
-              Активировать кухню
+            <ElButton v-if="!chef.isActive" type="primary" @click="routeToChat">
+              Написать шефу
             </ElButton>
 
             <ElButton v-else type="warning" @click="deactivateChef">
@@ -244,8 +246,10 @@ onMounted(async () => {
   color: #303133;
 }
 .dish-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 280px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  width: 280px;
   margin: 0;
 }
 .dish-card:hover {
@@ -315,8 +319,6 @@ onMounted(async () => {
   background-color: #c0c4cc;
   border-radius: 3px;
 }
-
-
 
 @media (max-width: 768px) {
   .dish-card {

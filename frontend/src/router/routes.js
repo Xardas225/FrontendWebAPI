@@ -156,7 +156,15 @@ const routes = [
       title: "Просмотр заказа",
     },
   },
-  
+  {
+    path: "/chat",
+    name: "chat",
+    component: () => import("@/views/chat/ChatView.vue"),
+    meta: {
+      requiresAuth: true,
+      title: "Чат",
+    },
+  },
 ];
 
 export default routes;
