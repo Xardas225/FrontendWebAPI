@@ -111,6 +111,16 @@ const routes = [
     props: true,
   },
   {
+    path: "/chefs/kitchen/:id",
+    name: "chef-kitchen",
+    component: () => import("@/views/chef/ChefKitchenView.vue"),
+    meta: {
+      requiresAuth: true,
+      title: "Кухня шефа",
+    },
+    props: true,
+  },
+  {
     path: "/cart",
     name: "cart",
     component: () => import("@/views/CartView.vue"),
@@ -146,6 +156,7 @@ const routes = [
       title: "Просмотр заказа",
     },
   },
+  
 ];
 
 export default routes;
