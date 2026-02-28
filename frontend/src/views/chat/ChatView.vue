@@ -18,7 +18,7 @@ import { useAuthStore } from "@/store/auth";
 const authApi = useAuthStore();
 const user = computed(() => authApi.user);
 const socket = ref(null);
-const url = "http://localhost:3000";
+const url = "http://localhost:3001";
 const isConnected = ref(false);
 
 const chats = ref([

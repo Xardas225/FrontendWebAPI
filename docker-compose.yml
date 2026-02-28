@@ -34,6 +34,21 @@ services:
     networks:
       - shared
 
+  mongodb:
+    image: mongo:6.0
+    container_name: chat-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: admin 
+      # MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: chats
+    volumes:
+      - mongodb_data:/data/db 
+    networks:
+      - shared
+
   mailhog:
     image: mailhog/mailhog:latest
     container_name: mailhog
@@ -42,3 +57,7 @@ services:
       - "8025:8025" 
     networks:
       - shared
+
+volumes:
+  mongodb_data: 
+    driver: local
