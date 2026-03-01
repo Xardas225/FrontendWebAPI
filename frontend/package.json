@@ -21,6 +21,7 @@
     "gltf-pipeline": "^4.3.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
+    "socket.io-client": "^4.8.3",
     "three": "^0.183.1",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
