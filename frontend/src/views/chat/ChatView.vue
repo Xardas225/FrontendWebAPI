@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { onMounted, ref, computed } from "vue";
 import {
   ElContainer,
   ElAside,
@@ -12,14 +12,13 @@ import {
   ElHeader,
   ElButton,
 } from "element-plus";
-import { io } from "socket.io-client";
+import { useSocket } from "@/composables/useSocket";
 import { useAuthStore } from "@/store/auth";
 
 const authApi = useAuthStore();
 const user = computed(() => authApi.user);
-const socket = ref(null);
-const url = "http://localhost:3001";
-const isConnected = ref(false);
+
+const { emit, chatId, senderId, recipientId, messages } = useSocket();
 
 const chats = ref([
   {
@@ -56,60 +55,31 @@ const chats = ref([
   },
 ]);
 
-const messages = ref([
-  {
-    id: 1,
-    text: "Привет! Ты получила мои файлы?",
-    time: "12:30",
-    isOwn: false,
-  },
-  { id: 2, text: "Да, спасибо. Посмотрю сегодня", time: "12:31", isOwn: true },
-  {
-    id: 3,
-    text: "Отлично! Тогда созвонимся вечером",
-    time: "12:32",
-    isOwn: false,
-  },
-  { id: 4, text: "Договорились", time: "12:33", isOwn: true },
-]);
-
 const newMessage = ref("");
-
-onMounted(() => {
-  socket.value = io(url, {
-    autoConnect: true,
-    transports: ["websocket"],
-  });
-
-  socket.value.on("connect", () => {
-    isConnected.value = true;
-    console.log("Сокет подключён");
-  });
-
-  socket.value.on("disconnect", () => {
-    isConnected.value = false;
-    console.log("Сокет отключён");
-  });
-
-  socket.value.emit("register", user.value.id);
-});
-
-onUnmounted(() => {
-  if (socket.value) {
-    socket.value.disconnect();
-    socket.value = null;
-  }
-});
 
 const sendMessage = () => {
   if (!newMessage.value.trim()) return;
-  socket.value.emit("chat message", {
-    to: 18,
+  emit("chat message", {
+    senderId: senderId.value,
+    recipientId: recipientId.value,
     text: newMessage.value,
-    messageId: Date.now(), // временный ID
+    chatId: chatId.value,
   });
   newMessage.value = "";
 };
+
+onMounted(async () => {
+  const registerData = {
+    users: [
+      // Sender
+      { id: user.value.id, name: user.value.name },
+      // Recipient
+      { id: 18, name: "Chef Super" },
+    ],
+  };
+
+  emit("register", registerData);
+});
 </script>
 
 <template>
